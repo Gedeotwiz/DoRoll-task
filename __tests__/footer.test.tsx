@@ -10,5 +10,7 @@ describe("show test of footer pragraph", () => {
 
 it("render footer pragraph", () => {
   const pElement = screen.getByRole("bottom");
+  const footerElement = screen.getByRole("footer");
   expect(pElement).toBeInTheDocument();
+  expect(footerElement).toBeInTheDocument();
 });
