@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 
 import Link from "next/link"
-import {LoginOutlined,UserOutlined,PhoneOutlined,MailOutlined,LockOutlined} from "@ant-design/icons";
+import {LoginOutlined,UserOutlined,PhoneOutlined,MailOutlined,LockOutlined,EyeOutlined} from "@ant-design/icons";
 import { Checkbox,Input,Button } from 'antd';
 import type { GetProp } from 'antd';
 
@@ -30,25 +30,25 @@ const [position, setPosition] = useState<'start' | 'end'>('end');
               <div className=" flex justify-between items-center">
                  <div className="w-[47%]">
                     <label htmlFor="" className="text-[10px]">First Name
-                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" prefix={<UserOutlined className="text-[12px] text-[#A0D911]" />} placeholder="Enter first name"/>
+                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" prefix={<UserOutlined className="text-[12px] text-[#c0d310]" />} placeholder="Enter first name"/>
                     </label>
                  </div>
                  <div className="w-[47%]">
                     <label htmlFor="" className="text-[10px]">Last Name
-                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="Enter last name" prefix={<UserOutlined className="text-[12px] text-[#A0D911]"/>}/>
+                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="Enter last name" prefix={<UserOutlined className="text-[12px] text-[#c0d310]"/>}/>
                     </label>
                  </div>
               </div>
               <div className=" flex justify-between items-center">
                  <div className="w-[47%]">
                     <label htmlFor="" className="text-[10px]">Email
-                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="Enter email" prefix={<MailOutlined className="text-[12px] text-[#A0D911]"/>}/>
+                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="Enter email" prefix={<MailOutlined className="text-[12px] text-[#c0d310]"/>}/>
                         
                     </label>
                  </div>
                  <div className="w-[47%]">
                     <label htmlFor="" className="text-[10px]">Phone Number
-                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="250 --- --- ---" prefix={<PhoneOutlined className="text-[12px] text-[#A0D911]"/>}/>
+                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="250 --- --- ---" prefix={<PhoneOutlined className="text-[12px] text-[#c0d310]"/>}/>
                         
                     </label>
                  </div>
@@ -56,12 +56,17 @@ const [position, setPosition] = useState<'start' | 'end'>('end');
               <div className=" flex justify-between items-center">
                  <div className="w-[47%]">
                     <label htmlFor="" className="text-[10px]">Password
-                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="Enter password" prefix={<LockOutlined className="text-[12px] text-[#A0D911]"/>}/>
+                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="Enter password" prefix={<LockOutlined className="text-[12px] text-[#c0d310]"/>}
+                         suffix={<EyeOutlined className="text-[12px] text-[#c0d310]"/>}
+                        />
+
                     </label>
                  </div>
                  <div className="w-[47%]">
                     <label htmlFor="" className="text-[10px]">Comfrim Password
-                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="Enter confrim password" prefix={<LockOutlined className="text-[12px] text-[#A0D911]"/>}/>
+                        <Input type="text" className="bg-[#dddd] w-full rounded-[5px] p-[4px] text-[12px]" placeholder="Enter confrim password" prefix={<LockOutlined className="text-[12px] text-[#c0d310]"/>}
+                         suffix={<EyeOutlined className="text-[12px] text-[#c0d310]"/>}
+                        />
                         
                     </label>
                  </div>
@@ -81,7 +86,7 @@ const [position, setPosition] = useState<'start' | 'end'>('end');
                 <p>Already have an account?</p>
                 <span>Go to Login</span>
             </div>
-            <li className="flex gap-[10px] justify-start items-center border border-gray-300 py-[6px] px-[16px] rounded-[5px]" onClick={props.pass}><p>Login</p><LoginOutlined className="text-[#A0D911]"/></li>
+            <li className="flex gap-[10px] justify-start items-center border border-gray-300 py-[6px] px-[16px] rounded-[5px]" onClick={props.pass}><p>Login</p><LoginOutlined className="text-[#c0d310]"/></li>
          </div>
         </>
     )
