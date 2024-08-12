@@ -56,9 +56,9 @@ export default function Header() {
             <UpOutlined className="text-[10px] border py-[13px] px-[5px] rounded-tr-[5px] rounded-br-[5px]"/>
           </div>
           {isProfile && (
-            <div className="bg-white rounded-[5px] absolute top-[56px] right-[2.6%] px-[20px] py-[30px] ">
+            <div className="bg-white rounded-[5px] absolute top-[56px] right-[3.5%] px-[20px] py-[30px] shadow">
               <div className="flex gap-[10px] justify-center items-center">
-                <Image src={jant} alt="good" className="w-[50px] h-[50px] rounded-[10px]"/>
+                <Image src={jant} alt="good" className="w-[50px] h-[50px] rounded-[10px] object-cover"/>
                 <div>
                   <h3>Yves Honore B.</h3>
                   <p className="text-gray-400 text-[12px]">yveshonore@awesomity.rw</p>

@@ -20,9 +20,9 @@ export default function Registration(){
         setSignup(true)
      }
     return (
-      <div className="bg-[#dddd] h-[100vh]">
+      <div className="bg-[#dddd]">
         <Header/>
-        <div className="flex justify-center items-center gap-[20px] flex-col h-[88vh]">
+        <div className="flex justify-center items-center gap-[20px] flex-col h-[85vh]">
             {signUp && (<SignUp pass={Handsignup}/>)}
             {login && (<Login pass={Handlelogin}/>)}
         </div>

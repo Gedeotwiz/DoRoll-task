@@ -8,7 +8,7 @@ export default function Login(props:any){
     const [position, setPosition] = useState<'start' | 'end'>('end');
     return (
         <>
-        <div className="w-[30%] flex justify-center rounded-[20px]">
+        <div className="w-[40%] flex justify-center rounded-[20px]">
             <div className="w-[50%] px-[20px] bg-[#eeee] flex flex-col justify-between rounded-tl-[10px] rounded-bl-[10px] py-[35px]">
                 <div className="border-2 border-black p-[5px] rounded-[8px] font-blod w-[35px] text-[#A0D911] text-center flex justify-center items-center">
                  <CheckOutlined className=" font-blod  text-[#c0d310]"/>
@@ -37,14 +37,14 @@ export default function Login(props:any){
                     </label>
                  </div>
                  <div className="flex justify-between items-center pt-[20px]">
-                  <Link href="/">Forgot Password</Link>
+                  <Link href="/" className="underline">Forgot Password</Link>
                   <Button type="primary" icon={<LoginOutlined />} iconPosition={position}>
                    Login
                   </Button>
                  </div>
             </form>
         </div>
-         <div className="bg-white w-[30%] p-[20px] rounded-[10px] flex justify-between items-center">
+         <div className="bg-white w-[40%] p-[20px] rounded-[10px] flex justify-between items-center">
             <div>
                 <p>If you don't have an account?</p>
                 <span>Go to register</span>
