@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <>
       <Header/>
-       <div className="bg-[#dddd] h-[85vh]">fgdg</div>
+       <div className="bg-[#dddd] h-[88vh]">fgdg</div>
      <Footer/>
     </>
   );
