@@ -21,6 +21,9 @@ const theme: ThemeConfig = {
       Input: {
         fontSize: 11,
         hoverBorderColor: "rgb(217,215,215)"
+      },
+      Typography: {
+        colorLink: "rgb(0,0,0)"
       }
     }
   
