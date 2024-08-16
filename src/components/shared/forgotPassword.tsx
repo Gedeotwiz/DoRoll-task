@@ -1,7 +1,7 @@
 
 import {Input ,Button,Card}from "antd"
 import React,{useState} from "react";
-import {LoginOutlined,MailOutlined} from "@ant-design/icons"
+import {CheckOutlined,MailOutlined} from "@ant-design/icons"
 import {Typography } from 'antd';
 
 const { Text, Link } = Typography;
@@ -21,8 +21,8 @@ export default function ForgotPassword(props:any){
                 </div>
                 <div className="flex justify-between items-center pt-[20px]">
                   <Link href="/" className="underline text-xs" onClick={props.pass}>Login instead</Link>
-                  <Button type="primary" icon={<LoginOutlined />} iconPosition={position}>
-                   <Link href="/index"> Login</Link>
+                  <Button type="primary" icon={<CheckOutlined />} iconPosition={position}>
+                   <Link href="/index"> Submit</Link>
                   </Button>
                  </div>
              </form>
