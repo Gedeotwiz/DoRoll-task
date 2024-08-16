@@ -1,11 +1,12 @@
 
 import Header from "@/components/shared/layout/header";
 import Footer from "@/components/shared/layout/footer";
-import {SearchOutlined,EyeOutlined,HolderOutlined} from "@ant-design/icons";
-import {Input ,Button}from "antd"
+import {SearchOutlined,HolderOutlined,} from "@ant-design/icons";
+import {Input ,}from "antd"
 import Tasks from "@/components/tasks";
 import filter from "../images/filter.png"
 import Image from "next/image";
+import Percent from "@/components/percent";
 
 const Home = () => {
   
@@ -28,6 +29,7 @@ const Home = () => {
            <div className="bg-white w-[35%] rounded-[10px] p-[20px] h-[75vh] flex flex-col justify-between">
              <div>
                <h1>Summary</h1>
+               <Percent/>
              </div>
              <div className="bg-[#eeee] rounded-[10px] p-[10px]">
                 <h1 className="text-[15px] pb-[5px]">Daily Tip:</h1>
