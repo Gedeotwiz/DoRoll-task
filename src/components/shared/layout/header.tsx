@@ -4,10 +4,13 @@ import { useRouter } from "next/router";
 import { SettingOutlined, HomeOutlined, CheckOutlined, UpOutlined, UserOutlined } from "@ant-design/icons";
 import { ExclamationCircleOutlined, FolderOutlined, LogoutOutlined } from "@ant-design/icons";
 import ButtonComponent from "../button";
-import { Button, Modal } from 'antd';
+import { Button, Modal,Input } from 'antd';
 import jant from "../../../images/jantie.jpeg";
 import Image from "next/image";
 import head from "../../../images/headphono.png";
+import type { DatePickerProps } from 'antd';
+import { DatePicker } from 'antd';
+import type { Dayjs } from 'dayjs';
 
 export default function Header() {
   const router = useRouter(); 
@@ -16,6 +19,10 @@ export default function Header() {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [isProfile, setIsProfile] = React.useState<boolean>(false);
 
+  const onChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
+    console.log(date, dateString);
+  };
+  const { TextArea } = Input;
   const showLoading = () => {
     setOpen(true);
     setLoading(true);
@@ -104,19 +111,19 @@ export default function Header() {
         <form action="">
           <div className="flex justify-between">
             <div className="pb-[7px] w-[60%]">
-              <label htmlFor="" className="text-[14px]">Title
-                <input type="text" placeholder="Enter title" className="w-full bg-[#dddd] text-[13px] p-[7px] rounded-[5px]"/>
+              <label htmlFor="">Title
+              <Input type="text"  variant="filled" placeholder="Enter title" />
               </label>
             </div>
             <div className="pb-[7px] w-[30%]">
-              <label htmlFor="" className="text-[14px]">Due Date
-                <input type="Date" className="w-full bg-[#dddd] text-[13px] p-[5px] rounded-[5px]"/>
+              <label htmlFor="">Due Date
+                 <DatePicker onChange={onChange} needConfirm variant="filled"/>;
               </label>
             </div>
           </div>
           <div className="pb-[7px]">
-            <label htmlFor="" className="text-[14px]">Description
-              <textarea name="" id="" placeholder="Enter description" className="w-full bg-[#dddd] text-[13px] p-[5px] rounded-[5px]"/>
+            <label htmlFor="">Description
+            <TextArea rows={4} placeholder="Enter description" maxLength={6} />
             </label>
           </div>
         </form>
