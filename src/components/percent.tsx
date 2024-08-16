@@ -1,11 +1,11 @@
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {InfoCircleOutlined,CheckOutlined,FileProtectOutlined,IssuesCloseOutlined} from "@ant-design/icons";
 import {Card,Statistic}from "antd"
 
 export default function Percent(){
     return (
-        <div className="grid-cols-2">
+        <div className="flex flex-wrap">
         <Card
-         className="shadow-sm rounded-lg"
+         className="shadow-sm rounded-lg w-[200px]"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -14,7 +14,8 @@ export default function Percent(){
                +10%
              </span>
            </div>
-           <InfoCircleOutlined
+           
+           <FileProtectOutlined
              style={{ fontSize: "20px", color: "#9ca3af" }}
            />
          </div>
@@ -22,7 +23,7 @@ export default function Percent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg"
+         className="shadow-sm rounded-lg w-[200px]"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -31,7 +32,7 @@ export default function Percent(){
                +10%
              </span>
            </div>
-           <InfoCircleOutlined
+           <CheckOutlined
              style={{ fontSize: "20px", color: "#9ca3af" }}
            />
          </div>
@@ -39,7 +40,7 @@ export default function Percent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg"
+         className="shadow-sm rounded-lg w-[200px]"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -56,7 +57,7 @@ export default function Percent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg"
+         className="shadow-sm rounded-lg w-[200px]"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -65,7 +66,7 @@ export default function Percent(){
                +10%
              </span>
            </div>
-           <InfoCircleOutlined
+           <IssuesCloseOutlined
              style={{ fontSize: "20px", color: "#9ca3af" }}
            />
          </div>
