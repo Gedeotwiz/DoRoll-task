@@ -46,8 +46,8 @@ export default function Tasks() {
                <p>1</p>
              </div>
              <div className="flex items-center gap-[25px]">
-              <Tag color="default">ON-TRACK</Tag>
-               <Text className='w-[100px]'>Due: Today</Text>
+              <Tag color="default " className='w-[160px]'>ON-TRACK</Tag>
+               <Text className='w-[150px]'>Due: Today</Text>
              </div>
              <div>
              <Text >Run some errands in town</Text>
@@ -80,8 +80,8 @@ export default function Tasks() {
                <p>1</p>
              </div>
              <div className="flex items-center gap-[25px]">
-              <Tag color="default">Done</Tag>
-               <Text className='w-[100px]'>Due: Today</Text>
+              <Tag color="default " className='w-[160px]'>Done</Tag>
+               <Text className='w-[150px]'>Due: Today</Text>
              </div>
              <div>
              <Text >Do Nothing</Text>
@@ -115,8 +115,8 @@ export default function Tasks() {
                <p>1</p>
              </div>
              <div className="flex items-center gap-[25px]">
-              <Tag color="error">OFF-TRACK</Tag>
-               <Text className='w-[100px]'>Due: Yesterday</Text>
+              <Tag color="error" className='w-[160px]'>OFF-TRACK</Tag>
+               <Text className='w-[150px]'>Due: Yesterday</Text>
              </div>
              <div>
              <Text >Hit the Gym</Text>
@@ -148,8 +148,8 @@ export default function Tasks() {
             }>
                 <h1 className='font-bold pb-[20px]'>Run some errands in town</h1>
                 <div className='flex gap-[20px] pb-[10px]'>
-                  <Tag>ON-TRACK</Tag>
-                  <Text >Due: Today</Text>
+                  <Tag className='w-[160px]'>ON-TRACK</Tag>
+                  <Text className='w-[150px]'>Due: Today</Text>
                 </div>
                 <Text >When requiring users to interact with the application, but without jumping to a new page and interrupting the user's workflow, 
                   you can use Modal to create a new floating layer over the current page to get user feedback or display information.</Text>
