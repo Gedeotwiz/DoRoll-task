@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { DeleteOutlined, EditOutlined, HolderOutlined } from "@ant-design/icons";
 import { Button, Checkbox,Modal } from 'antd';
-import { useGetTasksQuery } from './redux/task/api/apiSlice';
+// import { useGetTasksQuery } from './redux/task/api/apiSlice';
 import {Typography } from 'antd';
 import {Tag } from 'antd';
 
@@ -27,10 +27,10 @@ export default function Tasks() {
     setIsopen(false);
   };
 
-  const {data:tasks,error,isLoading}=useGetTasksQuery()
+  // const {data:tasks,error,isLoading}=useGetTasksQuery()
 
-  if (isLoading) return <p className='text-center'>Loading...</p>;
-  if (error) return <p className='text-center text-3xl'>Task not found</p>;
+  // if (isLoading) return <p className='text-center'>Loading...</p>;
+  // if (error) return <p className='text-center text-3xl'>Task not found</p>;
 
   return (
       <>
