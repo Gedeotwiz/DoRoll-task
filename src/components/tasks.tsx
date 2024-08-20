@@ -46,7 +46,9 @@ export default function Tasks() {
                <p>1</p>
              </div>
              <div className="flex items-center gap-[25px]">
-              <Tag color="default " className='w-[160px]'>ON-TRACK</Tag>
+                <div className='w-[160px]'>
+                <Tag color="default ">ON-TRACK</Tag>
+                </div>
                <Text className='w-[150px]'>Due: Today</Text>
              </div>
              <div>
@@ -80,7 +82,9 @@ export default function Tasks() {
                <p>1</p>
              </div>
              <div className="flex items-center gap-[25px]">
-              <Tag color="default " className='w-[160px]'>Done</Tag>
+               <div className='w-[160px]'>
+                 <Tag color="default ">Done</Tag>
+               </div>
                <Text className='w-[150px]'>Due: Today</Text>
              </div>
              <div>
@@ -115,7 +119,9 @@ export default function Tasks() {
                <p>1</p>
              </div>
              <div className="flex items-center gap-[25px]">
-              <Tag color="error" className='w-[160px]'>OFF-TRACK</Tag>
+               <div className='w-[160px]'>
+               <Tag color="error">OFF-TRACK</Tag>
+               </div>
                <Text className='w-[150px]'>Due: Yesterday</Text>
              </div>
              <div>
@@ -148,7 +154,9 @@ export default function Tasks() {
             }>
                 <h1 className='font-bold pb-[20px]'>Run some errands in town</h1>
                 <div className='flex gap-[20px] pb-[10px]'>
-                  <Tag className='w-[160px]'>ON-TRACK</Tag>
+                   <div className='w-[160px]'>
+                   <Tag >ON-TRACK</Tag>
+                   </div>
                   <Text className='w-[150px]'>Due: Today</Text>
                 </div>
                 <Text >When requiring users to interact with the application, but without jumping to a new page and interrupting the user's workflow, 
