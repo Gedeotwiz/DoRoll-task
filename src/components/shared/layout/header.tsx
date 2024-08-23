@@ -49,7 +49,7 @@ export default function Header() {
         <div className="flex justify-center items-center gap-[30px]">
           <div className="flex justify-center items-center gap-[10px]">
             <HomeOutlined className={isHome ? "text-[#c0d310]" : ""}/>
-            <Link href="/" className={isHome ? "font-bold " : ""}>Home</Link>
+            <Link href="/dashboardPage" className={isHome ? "font-bold " : ""}>Home</Link>
           </div>
           <div className="flex justify-center items-center gap-[10px]">
             <SettingOutlined className={isSettings ? "text-[#c0d310]" : ""}/>
@@ -91,7 +91,7 @@ export default function Header() {
               </div>
               <li className="list-none flex gap-[10px] justify-start items-center">
                 <LogoutOutlined/>
-                <Link href="/registrationPage">Logout</Link>
+                <Link href="/">Logout</Link>
               </li>
             </div>
           )}

@@ -24,6 +24,11 @@ const theme: ThemeConfig = {
       },
       Typography: {
         colorLink: "rgb(0,0,0)"
+      },
+      Tag: {
+        borderRadiusSM: 15,
+        colorTextLightSolid: "rgb(0,0,0)"
+
       }
     }
   
