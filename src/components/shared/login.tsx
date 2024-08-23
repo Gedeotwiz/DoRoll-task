@@ -2,7 +2,7 @@ import { LoginOutlined, MailOutlined, LockOutlined, CheckOutlined, EyeOutlined }
 import { Input, Button, Card, Typography } from "antd";
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode"; 
 
 const { Text, Link } = Typography;
 
@@ -33,19 +33,20 @@ export default function Login(props: any) {
 
             if (response.ok) {
                 const token = result.token;
-                console.log(token)
                 localStorage.setItem('token', token);
 
-                const decodedToken: any = jwtDecode(token);
-                const userRole = decodedToken.role;
-                console.log(userRole)
+                
+                const decodedToken = jwtDecode<{ userRole: string }>(token);
+                const userRole = decodedToken.userRole;
+                console.log(userRole);
+
                 alert(result.message);
                 if (userRole === 'admin') {
                     router.push('/dashboardPage');
                 } else if (userRole === 'user') {
                     router.push('/dashboardPage');
                 } else {
-                    router.push('/dashboardPage');
+                    alert('Role not recognized');
                 }
             }
         } catch (error) {
