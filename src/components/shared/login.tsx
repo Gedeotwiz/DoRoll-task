@@ -33,17 +33,19 @@ export default function Login(props: any) {
 
             if (response.ok) {
                 const token = result.token;
+                console.log(token)
                 localStorage.setItem('token', token);
 
                 const decodedToken: any = jwtDecode(token);
                 const userRole = decodedToken.role;
+                console.log(userRole)
                 alert(result.message);
                 if (userRole === 'admin') {
                     router.push('/dashboardPage');
                 } else if (userRole === 'user') {
                     router.push('/dashboardPage');
                 } else {
-                    alert('Role not recognized');
+                    router.push('/dashboardPage');
                 }
             }
         } catch (error) {
