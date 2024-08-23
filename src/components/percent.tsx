@@ -3,9 +3,9 @@ import {Card,Statistic}from "antd"
 
 export default function Percent(){
     return (
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="flex flex-wrap gap-1 justify-center">
         <Card
-         className="shadow-sm rounded-lg w-[180px] p-3"
+         className="shadow-sm rounded-lg w-[130px] p-3"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -23,7 +23,7 @@ export default function Percent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg w-[180px] p-3"
+         className="shadow-sm rounded-lg w-[130px] p-3"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -40,7 +40,7 @@ export default function Percent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg w-[180px] p-3"
+         className="shadow-sm rounded-lg w-[130px] p-3"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -57,7 +57,7 @@ export default function Percent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg w-[180px] p-3"
+         className="shadow-sm rounded-lg w-[130px] p-3"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
