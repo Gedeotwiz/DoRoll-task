@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Checkbox, Input, Button } from 'antd';
 import { LoginOutlined, UserOutlined, PhoneOutlined, MailOutlined, LockOutlined, EyeOutlined } from "@ant-design/icons";
 import { Typography } from 'antd';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../redux/auth/registerSlice'; 
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 export default function SignUp(props: any) {
-    const [isChecked, setIsChecked] = useState(false); 
-
+    const [isChecked, setIsChecked] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -17,30 +18,25 @@ export default function SignUp(props: any) {
         role: "user"
     });
     const [position, setPosition] = useState<'start' | 'end'>('end');
-    const handleChange = async (e: any) => {
+    const dispatch = useDispatch();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3000/API/V1/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-            const result = await response.json();
-            console.log(result);
-            alert(result.message);
+            await dispatch(registerUser(formData) as any);
+            alert('Registration successful');
         } catch (error) {
             console.error('Error:', error);
+            alert('Failed to register');
         }
     };
 
     const handleCheckboxChange = (checkedValues: any) => {
-        setIsChecked(checkedValues.length > 0); 
+        setIsChecked(checkedValues.length > 0);
     };
 
     const plainOptions = [
@@ -57,14 +53,14 @@ export default function SignUp(props: any) {
                 <div className="flex justify-between items-center">
                     <div className="w-[47%]">
                         <label htmlFor="firstName" ><Text>First Name</Text>
-                            <Input type="text" variant="filled" prefix={<UserOutlined className="text-[#c0d310]" />} placeholder="Enter first name"
+                            <Input type="text" prefix={<UserOutlined className="text-[#c0d310]" />} placeholder="Enter first name"
                                 name="firstName" value={formData.firstName} onChange={handleChange}
                             />
                         </label>
                     </div>
                     <div className="w-[47%]">
                         <label htmlFor="lastName" ><Text>Last Name</Text>
-                            <Input type="text" variant="filled" placeholder="Enter last name" prefix={<UserOutlined className="text-[#c0d310]" />}
+                            <Input type="text" placeholder="Enter last name" prefix={<UserOutlined className="text-[#c0d310]" />}
                                 name="lastName" value={formData.lastName} onChange={handleChange}
                             />
                         </label>
@@ -73,14 +69,14 @@ export default function SignUp(props: any) {
                 <div className="flex justify-between items-center">
                     <div className="w-[47%]">
                         <label htmlFor="email" ><Text>Email</Text>
-                            <Input type="email" variant="filled" placeholder="Enter email" prefix={<MailOutlined className="text-[#c0d310]" />}
+                            <Input type="email" placeholder="Enter email" prefix={<MailOutlined className="text-[#c0d310]" />}
                                 name="email" value={formData.email} onChange={handleChange}
                             />
                         </label>
                     </div>
                     <div className="w-[47%]">
                         <label htmlFor="phoneNumber" ><Text>Phone Number</Text>
-                            <Input type="string" variant="filled" placeholder="250 --- --- ---" prefix={<PhoneOutlined className="text-[#c0d310]" />}
+                            <Input type="text" placeholder="250 --- --- ---" prefix={<PhoneOutlined className="text-[#c0d310]" />}
                                 name="phoneNumber" value={formData.phoneNumber} onChange={handleChange}
                             />
                         </label>
@@ -89,17 +85,17 @@ export default function SignUp(props: any) {
                 <div className="flex justify-between items-center">
                     <div className="w-[47%]">
                         <label htmlFor="password"><Text>Password</Text>
-                            <Input type="password" variant="filled" placeholder="Enter password" prefix={<LockOutlined className="text-[#c0d310]" />}
+                            <Input type="password" placeholder="Enter password" prefix={<LockOutlined className="text-[#c0d310]" />}
                                 suffix={<EyeOutlined className="text-[10px] text-[#c0d310]" />}
                                 name="password" value={formData.password} onChange={handleChange}
                             />
                         </label>
                     </div>
                     <div className="w-[47%]">
-                        <label htmlFor="password" ><Text>Confirm Password</Text>
-                            <Input type="password" variant="filled" placeholder="Enter confirm password" prefix={<LockOutlined className="text-[#c0d310]" />}
+                        <label htmlFor="confirmPassword" ><Text>Confirm Password</Text>
+                            <Input type="password" placeholder="Enter confirm password" prefix={<LockOutlined className="text-[#c0d310]" />}
                                 suffix={<EyeOutlined className="text-[12px] text-[#c0d310]" />}
-                                name="password" value={formData.password} onChange={handleChange}
+                                name="confirmPassword" value={formData.password} onChange={handleChange}
                             />
                         </label>
                     </div>
