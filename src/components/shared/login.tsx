@@ -35,8 +35,10 @@ export default function Login(props: LoginProps) {
                 
                 const userRole = user?.role; 
                 if (userRole === 'admin') {
+                    alert('Loginis successfuly')
                     router.push('/dashboardPage');
                 } else {
+                    alert('Loginis successfuly')
                     router.push('/dashboardPage');
                 }
             }

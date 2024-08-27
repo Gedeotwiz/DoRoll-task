@@ -1,39 +1,75 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router"; 
 import { SettingOutlined, HomeOutlined, CheckOutlined, UpOutlined, UserOutlined } from "@ant-design/icons";
 import { ExclamationCircleOutlined, FolderOutlined, LogoutOutlined } from "@ant-design/icons";
 import ButtonComponent from "../button";
-import { Button, Modal,Input } from 'antd';
+import { Button, Modal, Input } from 'antd';
 import jant from "../../../images/jantie.jpeg";
 import Image from "next/image";
 import head from "../../../images/headphono.png";
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import type { Dayjs } from 'dayjs';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store/store';
-import { usePostTaskMutation } from '../../redux/slices/newtaskSlice'; 
+import {jwtDecode} from "jwt-decode";
+import { useAppDispatch } from '../../redux/store/hooks';
+import { AddNewtask } from '../../redux/slices/newtaskSlice'; 
+
+const { TextArea } = Input;
 
 export default function Header() {
   const router = useRouter(); 
+  const dispatch = useAppDispatch();
 
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [isProfile, setIsProfile] = React.useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isProfile, setIsProfile] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [time, setTime] = useState<string>('');
-  const [postTask] = usePostTaskMutation();
+  const [userId, setUserId] = useState<string | null>(null); 
 
-  const onChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded: any = jwtDecode(token); 
+      setUserId(decoded.userId); 
+    }
+  }, []); 
+
+  const onDateChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
+    if (Array.isArray(dateString)) {
+      setTime(dateString[0] || '');
+    } else {
+      setTime(dateString);
+    }
   };
-  const { TextArea } = Input;
+
+  const handleSubmit = async () => { 
+    if (!title || !description || !time || !userId) {  
+      alert('All fields are required!');  
+      return;  
+    }  
+
+    setLoading(true);  
+    try {  
+      await dispatch(AddNewtask({ title, description, time, userId })).unwrap();
+      alert('Task added successfully');  
+      setOpen(false);  
+      setTitle('');   
+      setDescription('');  
+      setTime('');
+    } catch (error) {  
+      console.log('Error adding task:', error);  
+      alert('Failed to add task');  
+    } finally {  
+      setLoading(false);  
+    }  
+  };
+
   const showLoading = () => {
     setOpen(true);
     setLoading(true);
-    
     setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -45,41 +81,6 @@ export default function Header() {
 
   const isHome = router.pathname === "/";
   const isSettings = router.pathname === "/settingpage";
-
-
-  const userId = useSelector((state: RootState) => state.auth.user?.id); 
-
-  const onDateChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
-    if (Array.isArray(dateString)) {
-      setTime(dateString[0] || '');
-    } else {
-      setTime(dateString);
-    }
-  };
-
-  const handleSubmit = async () => {  
-    if (!title || !description || !time || !userId) {  
-      alert('All fields are required!');  
-      return;  
-    }  
-
-    setLoading(true);  
-    try {  
-        
-      await postTask({ title, description, time, userId }).unwrap();  
-      alert('Task added successfully');  
-      setOpen(false);  
-      setTitle('');   
-      setDescription('');  
-      setTime(new Date().toISOString());  
-    } catch (error) {  
-      console.log('Error adding task:', error);  
-      alert('Failed to add task');  
-    } finally {  
-      setLoading(false);  
-    }  
-  };
-
 
   return (
     <>
@@ -146,7 +147,7 @@ export default function Header() {
             Add task +
           </Button>
         }
-        visible={open}
+        open={open}
         onCancel={() => setOpen(false)}
       >
         <form>
