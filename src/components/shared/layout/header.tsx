@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import Link from "next/link";
 import { useRouter } from "next/router"; 
 import { SettingOutlined, HomeOutlined, CheckOutlined, UpOutlined, UserOutlined } from "@ant-design/icons";
@@ -11,6 +11,9 @@ import head from "../../../images/headphono.png";
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
 import type { Dayjs } from 'dayjs';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store/store';
+import { usePostTaskMutation } from '../../redux/slices/newtaskSlice'; 
 
 export default function Header() {
   const router = useRouter(); 
@@ -18,6 +21,10 @@ export default function Header() {
   const [open, setOpen] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [isProfile, setIsProfile] = React.useState<boolean>(false);
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [time, setTime] = useState<string>('');
+  const [postTask] = usePostTaskMutation();
 
   const onChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
     console.log(date, dateString);
@@ -38,6 +45,41 @@ export default function Header() {
 
   const isHome = router.pathname === "/";
   const isSettings = router.pathname === "/settingpage";
+
+
+  const userId = useSelector((state: RootState) => state.auth.user?.id); 
+
+  const onDateChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
+    if (Array.isArray(dateString)) {
+      setTime(dateString[0] || '');
+    } else {
+      setTime(dateString);
+    }
+  };
+
+  const handleSubmit = async () => {  
+    if (!title || !description || !time || !userId) {  
+      alert('All fields are required!');  
+      return;  
+    }  
+
+    setLoading(true);  
+    try {  
+        
+      await postTask({ title, description, time, userId }).unwrap();  
+      alert('Task added successfully');  
+      setOpen(false);  
+      setTitle('');   
+      setDescription('');  
+      setTime(new Date().toISOString());  
+    } catch (error) {  
+      console.log('Error adding task:', error);  
+      alert('Failed to add task');  
+    } finally {  
+      setLoading(false);  
+    }  
+  };
+
 
   return (
     <>
@@ -98,32 +140,39 @@ export default function Header() {
         </div>
       </main>
       <Modal
-        title={<p>New Task</p>}
+        title="New Task"
         footer={
-          <Button type="primary" onClick={showLoading}>
+          <Button type="primary" onClick={handleSubmit} loading={loading}>
             Add task +
           </Button>
         }
-        loading={loading}
-        open={open}
+        visible={open}
         onCancel={() => setOpen(false)}
       >
-        <form action="">
-          <div className="flex justify-between">
-            <div className="pb-[7px] w-[60%]">
-              <label htmlFor="">Title
-              <Input type="text"  variant="filled" placeholder="Enter title" />
-              </label>
-            </div>
-            <div className="pb-[7px] w-[30%]">
-              <label htmlFor="">Due Date
-                 <DatePicker onChange={onChange} needConfirm variant="filled"/>;
-              </label>
-            </div>
+        <form>
+          <div className="pb-[7px]">
+            <label htmlFor="title">Title
+              <Input 
+                type="text" 
+                placeholder="Enter title" 
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </label>
           </div>
           <div className="pb-[7px]">
-            <label htmlFor="">Description
-            <TextArea rows={4} placeholder="Enter description" maxLength={6} />
+            <label htmlFor="dueDate">Due Date
+              <DatePicker onChange={onDateChange} format="MM/DD/YYYY" />
+            </label>
+          </div>
+          <div className="pb-[7px]">
+            <label htmlFor="description">Description
+              <TextArea 
+                rows={4} 
+                placeholder="Enter description" 
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </label>
           </div>
         </form>

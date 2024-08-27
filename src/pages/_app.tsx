@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ConfigProvider } from "antd";
 import { Provider } from "react-redux";
-import { store } from "@/components/redux/task/store/store";
+import { store } from "@/components/redux/store/store";
 import theme from '../components/util/themeConfig';
 
 export default function App({ Component, pageProps }: AppProps) {

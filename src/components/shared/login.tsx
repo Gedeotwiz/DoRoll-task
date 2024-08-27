@@ -2,56 +2,45 @@ import { LoginOutlined, MailOutlined, LockOutlined, CheckOutlined, EyeOutlined }
 import { Input, Button, Card, Typography } from "antd";
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
-import { jwtDecode } from "jwt-decode";
+import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
+import { loginUser } from '../redux/auth/thunk';
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
-export default function Login(props: any) {
+interface LoginProps {
+    forgot: () => void;
+    pass: () => void;
+}
+
+export default function Login(props: LoginProps) {
     const [position, setPosition] = useState<'start' | 'end'>('end');
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{ email: string; password: string }>({
         email: '',
         password: '',
     });
 
+    const dispatch = useAppDispatch();
     const router = useRouter();
+    
+    const { status, error, user } = useAppSelector((state) => state.auth);
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:3000/API/V1/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-            const result = await response.json();
-
-            if (response.ok) {
-                const token = result.token;
-                console.log(token)
-                localStorage.setItem('token', token);
-
-                const decodedToken: any = jwtDecode(token);
-                const userRole = decodedToken.role;
-                console.log(userRole)
-                alert(result.message);
+        dispatch(loginUser(formData)).then((result) => {
+            if (result.meta.requestStatus === 'fulfilled') {
+                
+                const userRole = user?.role; 
                 if (userRole === 'admin') {
-                    router.push('/dashboardPage');
-                } else if (userRole === 'user') {
                     router.push('/dashboardPage');
                 } else {
                     router.push('/dashboardPage');
                 }
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Login failed');
-        }
+        });
     };
 
     return (
@@ -71,21 +60,35 @@ export default function Login(props: any) {
                     <form onSubmit={handleSubmit} className="w-[50%] bg-white px-[20px] py-[35px] rounded-tr-[10px] rounded-br-[10px]">
                         <h1 className="pb-[20px] font-bold">Login</h1>
                         <div className="w-full">
-                            <label htmlFor="email"><Text>Email</Text>
-                                <Input type="text" variant="filled" placeholder="Enter email" prefix={<MailOutlined className="text-[#c0d310]" />}
-                                    name="email" value={formData.email} onChange={handleChange} />
+                            <label htmlFor="email">
+                                <Text>Email</Text>
+                                <Input
+                                    type="text"
+                                    placeholder="Enter email"
+                                    prefix={<MailOutlined className="text-[#c0d310]" />}
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
                             </label>
                         </div>
                         <div className="w-full">
-                            <label htmlFor="password"><Text>Password</Text>
-                                <Input type="password" variant="filled" placeholder="Enter password" prefix={<LockOutlined className="text-[#c0d310]" />}
+                            <label htmlFor="password">
+                                <Text>Password</Text>
+                                <Input
+                                    type="password"
+                                    placeholder="Enter password"
+                                    prefix={<LockOutlined className="text-[#c0d310]" />}
                                     suffix={<EyeOutlined className="text-[10px] text-[#c0d310]" />}
-                                    name="password" value={formData.password} onChange={handleChange} />
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                />
                             </label>
                         </div>
                         <div className="flex justify-between items-center pt-[20px]">
                             <Text className="underline " onClick={props.forgot}>Forgot Password</Text>
-                            <Button type="primary" htmlType="submit" icon={<LoginOutlined />} iconPosition={position}>
+                            <Button type="primary" htmlType="submit" icon={<LoginOutlined />}>
                                 Login
                             </Button>
                         </div>
