@@ -1,26 +1,30 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';  
 
+interface FormData {  
+  email: string;  
+  password: string;  
+}  
 
-interface FormData {
-  email: string;
-  password: string;
-}
+export const loginUser = createAsyncThunk(  
+  'auth/loginUser',  
+  async (formData: FormData) => {  
+    const response = await fetch('http://localhost:3001/API/V1/users/login', {  
+      method: 'POST',  
+      headers: {  
+        'Content-Type': 'application/json',  
+      },  
+      body: JSON.stringify(formData),  
+    });  
+ 
+    if (!response.ok) {  
+      const errorResponse = await response.json();  
+      throw new Error(errorResponse.message || 'Failed to fetch');   
+    }  
+ 
+    const data = await response.json(); 
+      
+    localStorage.setItem('token', data.token);   
 
-export const loginUser = createAsyncThunk(
-  'auth/loginUser',
-  async (formData: FormData) => {
-    const response = await fetch('http://localhost:3001/API/V1/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch'); 
-    }
-
-    return await response.json();
-  }
+    return data;   
+  }  
 );
