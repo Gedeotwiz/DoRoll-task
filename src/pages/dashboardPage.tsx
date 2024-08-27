@@ -2,13 +2,20 @@ import Header from "@/components/shared/layout/header";
 import Footer from "@/components/shared/layout/footer";
 import { SearchOutlined, HolderOutlined } from "@ant-design/icons";
 import { Input } from "antd";
-import Tasks from "@/components/tasks";
+import Tasks from "@/components/tasksOparetion";
 import filter from "../images/filter.png";
 import Image from "next/image";
 import Percent from "@/components/percent";
 import { Select } from "antd";
+import { useState } from "react";
 
 const Home = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <>
       <Header />
@@ -24,27 +31,29 @@ const Home = () => {
               placeholder="Search Task"
               prefix={<SearchOutlined className=" text-[#c0d310]" />}
               suffix={<Image src={filter} alt="icon" className="w-[20px]" />}
+              value={searchTerm}
+              onChange={handleSearch}
             />
           </div>
           <div className="w-[200px]">
-                <Select
-                  className="w-full"
-                  showSearch
-                  suffixIcon={<Image src={filter} alt="icon" className="w-[20px]" />}
-                  filterOption={(input, option) =>
-                    (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                  }
-                  options={[
-                    { value: "1", label: "Today" },
-                    { value: "2", label: "This Week" },
-                    { value: "3", label: "This Month" },
-                  ]}
-                  defaultValue="Filter List"
-                />
-              </div>
+            <Select
+              className="w-full"
+              showSearch
+              suffixIcon={<Image src={filter} alt="icon" className="w-[20px]" />}
+              filterOption={(input, option) =>
+                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+              }
+              options={[
+                { value: "1", label: "Today" },
+                { value: "2", label: "This Week" },
+                { value: "3", label: "This Month" },
+              ]}
+              defaultValue="Filter List"
+            />
+          </div>
         </div>
         <div className="flex justify-between items-center pt-[20px] gap-2">
-          <div className="bg-white w-[30%] rounded-[10px] p-6 h-[75vh] flex flex-col justify-between">
+          <div className="bg-white w-[25%] rounded-[10px] p-6 h-[75vh] flex flex-col justify-between">
             <div>
               <h1>Summary</h1>
               <div className="px-[6px] py-4">
@@ -67,20 +76,17 @@ const Home = () => {
             </div>
             <div className="bg-[#eeee] rounded-[10px] p-[10px]">
               <h1 className="text-[15px] pb-[5px]">Daily Tip:</h1>
-              <div className="flex justify-start items-center gap-[10px]">
-                <div className="bg-white py-[7px] px-[10px] rounded-[5px]">
-                  <HolderOutlined style={{ transform: "rotate(90deg)" }} />
-                </div>
-
-                <div>
-                  <p className="text-[12px]">Drag Tool</p>
-                  <span className="text-[10px]">Use this icon on the left to re-arrange tasks</span>
-                </div>
+              <div className="flex justify-between items-center gap-4">
+                <HolderOutlined style={{ transform: "rotate(90deg)" }} />
+                <p>
+                  "If the problem can be solved with action, you don’t have a problem.
+                  <span className="text-[#c0d310]"> You have an opportunity.</span>"
+                </p>
               </div>
             </div>
           </div>
-          <div className="bg-white w-full rounded-[10px] py-[20px] h-[75vh]">
-            <Tasks />
+          <div className="bg-white w-[80%] rounded-[10px] p-6 h-[75vh] overflow-y-scroll">
+            <Tasks searchTerm={searchTerm} />
           </div>
         </div>
       </div>

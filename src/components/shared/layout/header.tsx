@@ -29,6 +29,11 @@ export default function Header() {
   const [time, setTime] = useState<string>('');
   const [userId, setUserId] = useState<string | null>(null); 
 
+  const handleLogout =()=>{
+    localStorage.removeItem("token")
+    router.push("/")
+  }
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -132,9 +137,9 @@ export default function Header() {
                   <Link href="/">Archives</Link>
                 </li>
               </div>
-              <li className="list-none flex gap-[10px] justify-start items-center">
+              <li className="list-none flex gap-[10px] justify-start items-center" onClick={handleLogout}>
                 <LogoutOutlined/>
-                <Link href="/">Logout</Link>
+                <Link href="#">Logout</Link>
               </li>
             </div>
           )}
