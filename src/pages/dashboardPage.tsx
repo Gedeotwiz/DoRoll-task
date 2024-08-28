@@ -11,9 +11,14 @@ import { useState } from "react";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus,setFilterStatus]=useState('')
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleFilter = (value: string) => {
+    setFilterStatus(value);
   };
 
   return (
@@ -25,7 +30,7 @@ const Home = () => {
             <h1>Pending Task -7</h1>
           </div>
           <div className="w-[400px]">
-            <Input
+          <Input
               type="text"
               variant="filled"
               placeholder="Search Task"
@@ -40,13 +45,14 @@ const Home = () => {
               className="w-full"
               showSearch
               suffixIcon={<Image src={filter} alt="icon" className="w-[20px]" />}
+              onChange={handleFilter}
               filterOption={(input, option) =>
                 (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
               }
               options={[
-                { value: "1", label: "Today" },
-                { value: "2", label: "This Week" },
-                { value: "3", label: "This Month" },
+                { value: "1", label: "Done" },
+                { value: "2", label: "On-track" },
+                { value: "3", label: "off-track" },
               ]}
               defaultValue="Filter List"
             />

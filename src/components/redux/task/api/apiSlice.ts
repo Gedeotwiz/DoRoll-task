@@ -21,6 +21,10 @@ export const apiSlice = createApi({
       query: () => "tasks/userId/tasks",
     }),
 
+    getUser: builder.query<any, void>({
+      query: (id) => `users/${id}`,
+    }),
+
     searchTask: builder.query<any, string | void>({
       query: (searchTerm) => `tasks/search?query=${searchTerm}`,
     }),
@@ -47,8 +51,16 @@ export const apiSlice = createApi({
         method: "DELETE", 
       }),
     }),
+
+    updateProfile: builder.mutation({
+      query: ({ id, ...data }: { id: string}) => ({
+        url: `/profile/update/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery, useSearchTaskQuery,
-  useUpdateTaskStatusMutation,useUpdateTaskMutation,useDeleteTaskMutation} = apiSlice;
+export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery, useSearchTaskQuery,useGetUserQuery,
+  useUpdateTaskStatusMutation,useUpdateTaskMutation,useDeleteTaskMutation,useUpdateProfileMutation} = apiSlice;
