@@ -21,9 +21,9 @@ export const apiSlice = createApi({
       query: () => "tasks/userId/tasks",
     }),
 
-    getUser: builder.query<any, void>({
+    getUser: builder.query<any, string>({
       query: (id) => `users/${id}`,
-    }),
+  }),
 
     searchTask: builder.query<any, string | void>({
       query: (searchTerm) => `tasks/search?query=${searchTerm}`,
@@ -59,8 +59,16 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+
+    updatePassword: builder.mutation({
+      query: ({ id, ...data }: { id: string}) => ({
+        url: `/profile/updatePassword/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery, useSearchTaskQuery,useGetUserQuery,
+export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery, useSearchTaskQuery,useGetUserQuery,useUpdatePasswordMutation,
   useUpdateTaskStatusMutation,useUpdateTaskMutation,useDeleteTaskMutation,useUpdateProfileMutation} = apiSlice;

@@ -1,17 +1,62 @@
+
+import type { AppProps } from "next/app";
 import Header from "@/components/shared/layout/header";
 import Footer from "@/components/shared/layout/footer";
+import React, { useEffect, useState } from "react";
 import { SearchOutlined, HolderOutlined } from "@ant-design/icons";
-import { Input } from "antd";
+import { Input, Select } from "antd";
 import Tasks from "@/components/tasksOparetion";
 import filter from "../images/filter.png";
 import Image from "next/image";
 import Percent from "@/components/percent";
-import { Select } from "antd";
-import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useGetTaskRelatedToUserIdQuery, useGetTasksQuery } from "@/components/redux/task/api/apiSlice";
+
+interface Task {
+  status: 'ON-TRACK' | 'OFF-TRACK' | 'DONE';
+}
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus,setFilterStatus]=useState('')
+  const [filterStatus, setFilterStatus] = useState('');
+  const [timeFilter, setTimeFilter] = useState<string>('');
+  const { data: task, isLoading, error } = useGetTaskRelatedToUserIdQuery();
+  const { data: tasks } = useGetTasksQuery();
+  const [uTask, setUTask] = useState(0);
+  const [iTask, setITask] = useState(0);
+  const [role, setRole] = useState<string | null>(null);
+  const [pendingNumber, setPendingNumber] = useState(0);
+
+  useEffect(() => {
+    if (task) {
+      const doneTasks = task.data.filter((task: Task) => task.status === 'DONE').length;
+      setUTask(doneTasks);
+    }
+    if (tasks) {
+      const doneTasks = tasks.data.filter((task: Task) => task.status === 'DONE').length;
+      setITask(doneTasks);
+    }
+  }, [task, tasks]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      setRole(decoded.userRole);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (role === 'user') {
+      setPendingNumber(uTask);
+    } else if (role === 'admin') {
+      setPendingNumber(iTask);
+    }
+    console.log('Role:', role);
+    console.log('uTask:', uTask);
+    console.log('iTask:', iTask);
+    console.log('Pending Number:', pendingNumber);
+  }, [role, uTask, iTask]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -24,17 +69,17 @@ const Home = () => {
   return (
     <>
       <Header />
-      <div className="bg-[#dddd] h-[88vh] py-[20px] px-[50px]">
+      <div className="bg-[#dddd] h-[90vh] py-[20px] px-[50px]">
         <div className="bg-white rounded-[10px] flex justify-between items-center p-[10px]">
           <div>
-            <h1>Pending Task -7</h1>
+            <h1>Pending Task - {pendingNumber}</h1>
           </div>
           <div className="w-[400px]">
-          <Input
+            <Input
               type="text"
               variant="filled"
               placeholder="Search Task"
-              prefix={<SearchOutlined className=" text-[#c0d310]" />}
+              prefix={<SearchOutlined className="text-[#c0d310]" />}
               suffix={<Image src={filter} alt="icon" className="w-[20px]" />}
               value={searchTerm}
               onChange={handleSearch}
@@ -50,11 +95,12 @@ const Home = () => {
                 (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
               }
               options={[
-                { value: "1", label: "Done" },
-                { value: "2", label: "On-track" },
-                { value: "3", label: "off-track" },
+                { value: '', label: 'All' },
+                { value: 'DONE', label: 'Done' },
+                { value: 'ON-TRACK', label: 'On-track' },
+                { value: 'OFF-TRACK', label: 'Off-track' },
               ]}
-              defaultValue="Filter List"
+              defaultValue=""
             />
           </div>
         </div>
@@ -62,22 +108,25 @@ const Home = () => {
           <div className="bg-white w-[25%] rounded-[10px] p-6 h-[75vh] flex flex-col justify-between">
             <div>
               <h1>Summary</h1>
-              <div className="px-[6px] py-4">
+              <div className="w-full flex flex-grow justify-center items-center py-4">
                 <Select
-                  className="w-full"
+                  className="w-[96%]"
                   showSearch
                   suffixIcon={<Image src={filter} alt="icon" className="w-[20px]" />}
+                  onChange={(value) => setTimeFilter(value)}
                   filterOption={(input, option) =>
                     (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                   }
                   options={[
-                    { value: "1", label: "Today" },
-                    { value: "2", label: "This Week" },
-                    { value: "3", label: "This Month" },
+                    { value: "", label: "All Time" },
+                    { value: "daily", label: "Today" },
+                    { value: "weekly", label: "This Week" },
+                    { value: "monthly", label: "This Month" },
                   ]}
-                  defaultValue="Show"
+                  defaultValue=""
                 />
               </div>
+
               <Percent />
             </div>
             <div className="bg-[#eeee] rounded-[10px] p-[10px]">
@@ -92,7 +141,7 @@ const Home = () => {
             </div>
           </div>
           <div className="bg-white w-[80%] rounded-[10px] p-6 h-[75vh] overflow-y-scroll">
-            <Tasks searchTerm={searchTerm} />
+            <Tasks searchTerm={searchTerm} filterStatus={filterStatus} />
           </div>
         </div>
       </div>

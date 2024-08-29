@@ -18,6 +18,7 @@ export default function Tasks(props: any) {
 
   const searchTask=props.searchTerm
   const statusTask=props.filterStatus
+  const timeFilter=props.timeFilter
 
   useEffect(() => {
     if (role === 'admin') {
@@ -26,16 +27,13 @@ export default function Tasks(props: any) {
     } else if (role === 'user') {
       setUser(true);
       setAdmin(false);
-    } else {
-      setUser(false);
-      setAdmin(false);
     }
   }, [role]);
 
   return (  
     <> 
-      {user && <UserTask searchTerm={searchTask} filterStatus={statusTask}/>}
-      {admin && <AdminTask searchTerm={searchTask}/>}
+      {user && <UserTask searchTerm={searchTask} filterStatus={statusTask} timeFilter={timeFilter}/>}
+      {admin && <AdminTask searchTerm={searchTask} filterStatus={statusTask} timeFilter={timeFilter}/>}
       
     </>  
   );  

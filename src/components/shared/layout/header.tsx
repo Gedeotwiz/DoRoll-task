@@ -14,6 +14,14 @@ import type { Dayjs } from 'dayjs';
 import {jwtDecode} from "jwt-decode";
 import { useAppDispatch } from '../../redux/store/hooks';
 import { AddNewtask } from '../../redux/slices/newtaskSlice'; 
+import { useGetUserQuery } from "@/components/redux/task/api/apiSlice";
+
+interface UserData {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 
 const { TextArea } = Input;
 
@@ -27,20 +35,18 @@ export default function Header() {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [time, setTime] = useState<string>('');
-  const [userId, setUserId] = useState<string | null>(null); 
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userData, setUserData] = useState<UserData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+}); 
+
 
   const handleLogout =()=>{
     localStorage.removeItem("token")
     router.push("/")
   }
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decoded: any = jwtDecode(token); 
-      setUserId(decoded.userId); 
-    }
-  }, []); 
 
   const onDateChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
     if (Array.isArray(dateString)) {
@@ -71,6 +77,30 @@ export default function Header() {
       setLoading(false);  
     }  
   };
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded: any = jwtDecode(token);
+        setUserId(decoded.userId);
+    }
+}, []);
+
+const { data: fetchedUserData, error, isLoading } = useGetUserQuery(userId as string);
+
+useEffect(() => {
+    if (fetchedUserData) {
+        setUserData({
+            firstName: fetchedUserData.data.firstName,
+            lastName: fetchedUserData.data.lastName,
+            email: fetchedUserData.data.email,
+        });
+    }
+}, [fetchedUserData]);
+
+
+
 
   const showLoading = () => {
     setOpen(true);
@@ -111,12 +141,12 @@ export default function Header() {
             <UpOutlined className="text-[10px] border py-[13px] px-[5px] rounded-tr-[5px] rounded-br-[5px]"/>
           </div>
           {isProfile && (
-            <div className="bg-white rounded-[5px] absolute top-[56px] right-[3.5%] px-[20px] py-[30px] shadow">
+            <div className="bg-white rounded-[5px] absolute top-[56px] right-[3.5%] px-[20px] py-[30px] shadow ">
               <div className="flex gap-[10px] justify-center items-center">
                 <Image src={jant} alt="good" className="w-[50px] h-[50px] rounded-[10px] object-cover"/>
                 <div>
-                  <h3>Yves Honore B.</h3>
-                  <p className="text-gray-400 text-[12px]">yveshonore@awesomity.rw</p>
+                  <h3>{userData.firstName} {userData.lastName}</h3>
+                  <p className="text-gray-400 text-[12px]">{userData.email}</p>
                 </div>
               </div>
               <div className="flex flex-col gap-[14px] py-[20px] my-[20px] border-y border-y-gray-200 list-none">
@@ -156,7 +186,8 @@ export default function Header() {
         onCancel={() => setOpen(false)}
       >
         <form>
-          <div className="pb-[7px]">
+        <div className='flex justify-between items-center'>
+        <div className="pb-[7px] w-[60%]">
             <label htmlFor="title">Title
               <Input 
                 type="text" 
@@ -166,11 +197,12 @@ export default function Header() {
               />
             </label>
           </div>
-          <div className="pb-[7px]">
+          <div className="pb-[7px] w-[30%]">
             <label htmlFor="dueDate">Due Date
               <DatePicker onChange={onDateChange} format="MM/DD/YYYY" />
             </label>
           </div>
+        </div>
           <div className="pb-[7px]">
             <label htmlFor="description">Description
               <TextArea 
