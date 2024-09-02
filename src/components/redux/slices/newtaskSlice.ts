@@ -1,21 +1,16 @@
-
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const AddNewtask = createAsyncThunk(
-  'auth/registerUser',
-
+  'tasks/addNewTask',
   async (formData: { title: string; description: string; time: string; userId: string }) => {
-
-    const token= localStorage.getItem("token")
-
+    const token = localStorage.getItem("token");
     const response = await fetch('http://localhost:3001/API/V1/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(formData)
     });
     if (!response.ok) {
       throw new Error('Failed to add task');
@@ -24,20 +19,20 @@ export const AddNewtask = createAsyncThunk(
   }
 );
 
-interface AuthState {
+interface TaskState {
   task: any; 
   error: string | null; 
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 
-const initialState: AuthState = {
+const initialState: TaskState = {
   task: null,
   error: null,
   status: 'idle',
 };
 
-const AddtaskSlice = createSlice({
-  name: 'register',
+const taskSlice = createSlice({
+  name: 'tasks',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -49,7 +44,7 @@ const AddtaskSlice = createSlice({
       .addCase(AddNewtask.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.task = action.payload;
-      })
+            })
       .addCase(AddNewtask.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'An unknown error occurred';
@@ -57,4 +52,4 @@ const AddtaskSlice = createSlice({
   },
 });
 
-export default AddtaskSlice.reducer;
+export default taskSlice.reducer;

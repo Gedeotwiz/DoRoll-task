@@ -11,9 +11,6 @@ export const registerUser = createAsyncThunk(
       },
       body: JSON.stringify(formData),
     });
-    if (!response.ok) {
-      throw new Error('Failed to register');
-    }
     return response.json();
   }
 );

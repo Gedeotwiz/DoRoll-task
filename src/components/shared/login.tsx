@@ -1,5 +1,5 @@
-import { LoginOutlined, MailOutlined, LockOutlined, CheckOutlined, EyeOutlined } from "@ant-design/icons";
-import { Input, Button, Card, Typography } from "antd";
+import { LoginOutlined, MailOutlined, LockOutlined, CheckOutlined, EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import { Input, Button, Card, Typography, message, notification } from "antd";
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
@@ -13,11 +13,12 @@ interface LoginProps {
 }
 
 export default function Login(props: LoginProps) {
-    const [position, setPosition] = useState<'start' | 'end'>('end');
     const [formData, setFormData] = useState<{ email: string; password: string }>({
         email: '',
         password: '',
     });
+    const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -28,21 +29,53 @@ export default function Login(props: LoginProps) {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validate = () => {
+        const newErrors: { email?: string; password?: string } = {};
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!formData.email) {
+            newErrors.email = "Email is required";
+        } else if (!emailRegex.test(formData.email)) {
+            newErrors.email = "Invalid email format";
+        }
+
+        if (!formData.password) {
+            newErrors.password = "Password is required";
+        } else if (formData.password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters long";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        dispatch(loginUser(formData)).then((result) => {
-            if (result.meta.requestStatus === 'fulfilled') {
-                
-                const userRole = user?.role; 
-                if (userRole === 'admin') {
-                    alert('Loginis successfuly')
-                    router.push('/dashboardPage');
-                } else {
-                    alert('Loginis successfuly')
-                    router.push('/dashboardPage');
-                }
+        if (!validate()) return;
+
+        try {
+            const result = await dispatch(loginUser(formData));
+            if(result?.payload?.error){
+                notification.error({
+                    message: result.payload?.message[0]
+                })
+            }else{
+                notification.success({
+                    message: 'Login successfuly'
+                })
+        
+                router.push('/dashboardPage');
             }
-        });
+        } catch (error) {
+            console.error('Error:', error);
+            notification.error({
+                message: 'Fail to login'
+            })
+        }
+    };
+
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
     };
 
     return (
@@ -72,24 +105,30 @@ export default function Login(props: LoginProps) {
                                     value={formData.email}
                                     onChange={handleChange}
                                 />
+                                {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
                             </label>
                         </div>
                         <div className="w-full">
                             <label htmlFor="password">
                                 <Text>Password</Text>
                                 <Input
-                                    type="password"
+                                    type={passwordVisible ? 'text' : 'password'}
                                     placeholder="Enter password"
                                     prefix={<LockOutlined className="text-[#c0d310]" />}
-                                    suffix={<EyeOutlined className="text-[10px] text-[#c0d310]" />}
+                                    suffix={
+                                        passwordVisible ? 
+                                        <EyeInvisibleOutlined className="text-[10px] text-[#c0d310]" onClick={togglePasswordVisibility} /> : 
+                                        <EyeOutlined className="text-[10px] text-[#c0d310]" onClick={togglePasswordVisibility} />
+                                    }
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
                                 />
+                                {errors.password && <span style={{ color: 'red' }}>{errors.password}</span>}
                             </label>
                         </div>
                         <div className="flex justify-between items-center pt-[20px]">
-                            <Text className="underline " onClick={props.forgot}>Forgot Password</Text>
+                            <Text className="underline" onClick={props.forgot}>Forgot Password</Text>
                             <Button type="primary" htmlType="submit" icon={<LoginOutlined />}>
                                 Login
                             </Button>
@@ -97,13 +136,13 @@ export default function Login(props: LoginProps) {
                     </form>
                 </div>
             </Card>
-            <Card className="w-2/4 ">
+            <Card className="w-2/4">
                 <div className="flex justify-between items-center p-5">
                     <div className="flex flex-col">
                         <Text>If you don't have an account?</Text>
                         <Text>Go to register</Text>
                     </div>
-                    <Button onClick={props.pass} icon={<LoginOutlined className="text-[#c0d310]" />} iconPosition={position}>Register</Button>
+                    <Button onClick={props.pass} icon={<LoginOutlined className="text-[#c0d310]" />} iconPosition="start">Register</Button>
                 </div>
             </Card>
         </>
