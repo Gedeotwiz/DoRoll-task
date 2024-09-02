@@ -46,10 +46,10 @@ export const apiSlice = createApi({
     }),
 
     createTask: builder.mutation({
-      query: ({ title, description, time, userId }) => ({
+      query: (formData) => ({
         url: 'tasks',
         method: 'POST',
-        body: { title, description, time, userId },
+        body:formData ,
       }),
       invalidatesTags: ['getTodos'],  
     }),

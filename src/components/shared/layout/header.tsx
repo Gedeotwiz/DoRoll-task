@@ -6,12 +6,11 @@ import { ExclamationCircleOutlined, FolderOutlined, LogoutOutlined } from "@ant-
 import { Button, Modal, Input, notification, DatePicker,DatePickerProps } from "antd";
 import { Dayjs } from "dayjs";
 import Image from "next/image";
-import { jwtDecode } from "jwt-decode"; // Typo corrected (no need for named import here)
-import { useAppDispatch } from "../../redux/store/hooks"; // Make sure this is properly set up in your redux
+import { jwtDecode } from "jwt-decode"; 
+import { useAppDispatch } from "../../redux/store/hooks"; 
 import { useGetUserQuery, useCreateTaskMutation } from "@/components/redux/task/api/apiSlice";
 import head from "../../../images/headphono.png";
 
-// Define user data interface
 interface UserData {
   firstName: string;
   lastName: string;
@@ -37,13 +36,11 @@ export default function Header() {
     profileImage: ""
   });
 
-  // Logout handler
   const handleLogout = () => {
     localStorage.removeItem("token");
-    router.push("/");
+    router.replace('/')
   };
 
-  // Date change handler for DatePicker
   const onDateChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
     if (Array.isArray(dateString)) {
       setTime(dateString[0] || '');
@@ -52,7 +49,6 @@ export default function Header() {
     }
   };
 
-  // Task creation handler
   const handleSubmit = async () => {
     if (!title || !description || !time || !userId) {
       notification.error({

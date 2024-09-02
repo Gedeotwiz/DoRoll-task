@@ -4,6 +4,7 @@ import Login from "@/components/shared/login"
 import React,{useState} from "react"
 import ForgotPassword from "@/components/shared/forgotPassword"
 
+
 export default function Registration(){
     const [signUp,setSignup]=useState(false)
     const [login,setLogin]=useState(true)
@@ -32,12 +33,13 @@ export default function Registration(){
 
 
     return (
-      <div className="bg-[#dddd]">
+      
+               <div className="bg-[#dddd]">
         <div className="flex justify-center items-center gap-[20px] flex-col h-[100vh]">
             {signUp && (<SignUp signupCallback={Handsignup} />)}
             {login && (<Login pass={Handlelogin} forgot={LinkForgot}/>)}
             {isForgot && (<ForgotPassword pass={HandleForgot}/>)}
         </div>
-      </div>
+      </div> 
     )
 }
