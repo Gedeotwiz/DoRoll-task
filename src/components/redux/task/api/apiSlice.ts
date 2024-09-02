@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { File } from "buffer";
+
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -11,18 +13,23 @@ export const apiSlice = createApi({
       }
       return headers;
     },
+    
   }),
+  tagTypes: ['getTodos', 'getProfile'],
   endpoints: (builder) => ({
     getTasks: builder.query<any, void>({
       query: () => "tasks",
+      providesTags: ['getTodos']
     }),
 
     getTaskRelatedToUserId: builder.query<any, void>({
       query: () => "tasks/userId/tasks",
+      providesTags: ['getTodos']
     }),
 
     getUser: builder.query<any, string>({
       query: (id) => `users/${id}`,
+      providesTags: ['getProfile']
   }),
 
     searchTask: builder.query<any, string | void>({
@@ -35,6 +42,16 @@ export const apiSlice = createApi({
         method: 'PUT',
         body: { status },
       }),
+      invalidatesTags: ['getTodos']
+    }),
+
+    createTask: builder.mutation({
+      query: ({ title, description, time, userId }) => ({
+        url: 'tasks',
+        method: 'POST',
+        body: { title, description, time, userId },
+      }),
+      invalidatesTags: ['getTodos'],  
     }),
 
     updateTask: builder.mutation({
@@ -42,7 +59,9 @@ export const apiSlice = createApi({
         url: `/tasks/${id}`,
         method: 'PUT',
         body: { time,title,description },
+        
       }),
+      invalidatesTags: ['getTodos']
     }),
 
     deleteTask: builder.mutation({
@@ -50,6 +69,7 @@ export const apiSlice = createApi({
         url: `tasks/${id}`,
         method: "DELETE", 
       }),
+      invalidatesTags: ['getTodos']
     }),
 
     updateProfile: builder.mutation({
@@ -58,17 +78,36 @@ export const apiSlice = createApi({
         method: 'PUT',
         body: data,
       }),
+      invalidatesTags: ['getProfile']
     }),
 
     updatePassword: builder.mutation({
-      query: ({ id, ...data }: { id: string}) => ({
+      query: ({ id,currentPassword,newPassword }) => ({
         url: `/profile/updatePassword/${id}`,
         method: 'PUT',
-        body: data,
+        body: {currentPassword,newPassword}
       }),
+      invalidatesTags: ['getProfile']
     }),
+
+    uploadImage: builder.mutation({
+      query: ({ id, file }) => {
+        const formData = new FormData();
+        formData.append('file', file);
+    
+        return {
+          url: `profile/uploadImage/${id}`,
+          method: 'POST',
+          body: formData,
+        };
+      },
+      invalidatesTags: ['getProfile']
+    })
+    
   }),
+
 });
 
-export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery, useSearchTaskQuery,useGetUserQuery,useUpdatePasswordMutation,
+export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery,useCreateTaskMutation,
+   useSearchTaskQuery,useGetUserQuery,useUpdatePasswordMutation,useUploadImageMutation,
   useUpdateTaskStatusMutation,useUpdateTaskMutation,useDeleteTaskMutation,useUpdateProfileMutation} = apiSlice;

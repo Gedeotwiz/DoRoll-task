@@ -20,7 +20,7 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState('');
   const [timeFilter, setTimeFilter] = useState<string>('');
-  const { data: task, isLoading, error } = useGetTaskRelatedToUserIdQuery();
+  const { data: task} = useGetTaskRelatedToUserIdQuery();
   const { data: tasks } = useGetTasksQuery();
   const [uTask, setUTask] = useState(0);
   const [iTask, setITask] = useState(0);
@@ -29,11 +29,12 @@ const Home = () => {
 
   useEffect(() => {
     if (task) {
-      const doneTasks = task.data.filter((task: Task) => task.status === 'DONE').length;
+      const doneTasks = task.data.filter((task: Task) => task.status === 'ON-TRACK').length;
+      console.log(doneTasks)
       setUTask(doneTasks);
     }
     if (tasks) {
-      const doneTasks = tasks.data.filter((task: Task) => task.status === 'DONE').length;
+      const doneTasks = tasks.data.filter((task: Task) => task.status === 'ON-TRACK').length;
       setITask(doneTasks);
     }
   }, [task, tasks]);
@@ -69,7 +70,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <div className="bg-[#dddd] h-[90vh] py-[20px] px-[50px]">
+      <div className="bg-[#dddd] h-[88vh] py-[20px] px-[50px]">
         <div className="bg-white rounded-[10px] flex justify-between items-center p-[10px]">
           <div>
             <h1>Pending Task - {pendingNumber}</h1>
@@ -87,7 +88,7 @@ const Home = () => {
           </div>
           <div className="w-[200px]">
             <Select
-              className="w-full"
+              className="w-full z-0"
               showSearch
               suffixIcon={<Image src={filter} alt="icon" className="w-[20px]" />}
               onChange={handleFilter}
@@ -95,7 +96,7 @@ const Home = () => {
                 (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
               }
               options={[
-                { value: '', label: 'All' },
+                { value: '', label: 'Filter List' },
                 { value: 'DONE', label: 'Done' },
                 { value: 'ON-TRACK', label: 'On-track' },
                 { value: 'OFF-TRACK', label: 'Off-track' },
@@ -118,7 +119,7 @@ const Home = () => {
                     (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                   }
                   options={[
-                    { value: "", label: "All Time" },
+                    { value: "", label: "Show" },
                     { value: "daily", label: "Today" },
                     { value: "weekly", label: "This Week" },
                     { value: "monthly", label: "This Month" },

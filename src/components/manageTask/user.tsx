@@ -1,7 +1,8 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { DeleteOutlined, EditOutlined, HolderOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Modal, message, Typography, Tag } from 'antd';
+import { Button, Checkbox, DatePicker, Input, Modal, message, Typography, Tag, notification } from 'antd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useGetTaskRelatedToUserIdQuery, useUpdateTaskStatusMutation, useUpdateTaskMutation, useDeleteTaskMutation } from '../redux/task/api/apiSlice';
 import type { Dayjs } from 'dayjs';
 import type { DatePickerProps } from 'antd';
@@ -47,7 +48,6 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
     }
   }, [data]);
 
-  console.log(`Time Filter: ${timeFilter}`);
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearchTerm = task.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -81,10 +81,6 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
   
     return matchesSearchTerm && matchesFilterStatus && matchesTimeFilter;
   });
-  
-  
-  console.log(`Time Filter: ${timeFilter}`);
-
 
   const handleCheckboxChange = async (taskId: number) => {
     const updatedTask = tasks.find(task => task.id === taskId);
@@ -97,9 +93,13 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
       );
       try {
         await updateTaskStatus({ id: taskId, status: updatedTaskStatus }).unwrap();
-        message.success('Task status updated successfully');
+        notification.success({
+          message: 'Task status updated successfully'
+        });
       } catch (error) {
-        message.error('Failed to update task status');
+        notification.error({
+          message: 'Failed to update task status'
+        });
         console.error(error);
 
         setTasks(prevTasks =>
@@ -136,10 +136,14 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
           task.id === taskId ? { ...task, title, description, time } : task
         )
       );
-      message.success('Task successfully updated');
+      notification.success({
+        message: 'Task successfully updated'
+      });
       setIsOpen(false);
     } catch (error) {
-      message.error('Failed to update task');
+      notification.error({
+        message: 'Failed to update task'
+      });
       console.error(error);
     } finally {
       setLoading(false);
@@ -150,9 +154,13 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
     try {
       await deleteTask(taskId).unwrap();
       setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
-      message.success('Task successfully deleted');
+      notification.success({
+        message: 'Task successfully deleted'
+      });
     } catch (error) {
-      message.error('Failed to delete task');
+      notification.error({
+        message: 'Failed to delete task'
+      });
       console.error('Failed to delete task:', error);
     }
   };
@@ -166,61 +174,91 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
     }
   };
 
+  const handleOnDragEnd = (result: any) => {
+    const { source, destination } = result;
+
+    if (!destination) return;
+
+    const reorderedTasks = [...tasks];
+    const [movedTask] = reorderedTasks.splice(source.index, 1);
+    reorderedTasks.splice(destination.index, 0, movedTask);
+
+    setTasks(reorderedTasks);
+  };
+
   if (isLoading) return <p className="text-center">Loading...</p>;
   if (error) return <p className="text-center text-3xl">Error retrieving tasks</p>;
 
   return (
     <>
-      <div className="flex flex-col">
-        {filteredTasks.map((task: Task, index: number) => (
-          <div
-            key={task.id}
-            className={`flex justify-between items-center hover:bg-gray-200 py-2 px-4 ${task.status === 'DONE' ? 'text-gray-300 cursor-not-allowed' : ''
-              }`}
-          >
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="tasksList">
+          {(provided:any) => (
             <div
-              className={`flex items-center gap-5 w-[70%] ${task.status !== 'DONE' ? 'cursor-pointer' : ''}`}
-              onClick={() => task.status !== 'DONE' && showModal(task)}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="flex flex-col"
             >
-              <div className="flex items-center gap-2.5">
-                <HolderOutlined style={{ transform: 'rotate(90deg)' }} />
-                <p className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}>{index + 1}</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-28">
-                  <Tag color={task.status === 'ON-TRACK' ? 'default' : task.status === 'DONE' ? 'success' : 'error'}>
-                    {task.status}
-                  </Tag>
-                </div>
-                <Text className={`${task.status === 'DONE' ? 'text-gray-300' : task.status === 'OFF-TRACK' ? 'text-red-300' : ''}`}>Due: {task.time}</Text>
-              </div>
-              <Text className={`${task.status === 'DONE' ? 'text-gray-300' : task.status === 'OFF-TRACK' ? 'text-red-300' : ''}`}>
-                {task.title}
-              </Text>
+              {filteredTasks.map((task, index) => (
+                <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
+                  {(provided:any) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={`flex justify-between items-center hover:bg-gray-200 py-2 px-4 ${task.status === 'DONE' ? 'text-gray-300 cursor-not-allowed' : ''}`}
+                    >
+                      <div
+                        className={`flex items-center gap-5 w-[70%] ${task.status !== 'DONE' ? 'cursor-pointer' : ''}`}
+                        onClick={() => task.status !== 'DONE' && showModal(task)}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <HolderOutlined style={{ transform: 'rotate(90deg)' }} />
+                          <p className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}>{index + 1}</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="w-28">
+                            <Tag color={task.status === 'ON-TRACK' ? 'default' : task.status === 'DONE' ? 'success' : 'error'}>
+                              {task.status}
+                            </Tag>
+                          </div>
+                          <Text className={`${task.status === 'DONE' ? 'text-gray-300' : task.status === 'OFF-TRACK' ? 'text-red-300' : ''}`}>
+                            Due: {task.time}
+                          </Text>
+                        </div>
+                        <Text className={`${task.status === 'DONE' ? 'text-gray-300' : task.status === 'OFF-TRACK' ? 'text-red-300' : ''}`}>
+                          {task.title}
+                        </Text>
+                      </div>
+                      <div className="flex items-center gap-5">
+                        <Text className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}>Created: {new Date(task.createdAt).toLocaleDateString()}</Text>
+                        <EditOutlined
+                          className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}
+                          onClick={() => showModal(task)}
+                        />
+                        <DeleteOutlined
+                          className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}
+                          onClick={() => task.status !== 'DONE' && handleDeleteTask(task.id)}
+                        />
+                        <Checkbox
+                          onChange={() => handleCheckboxChange(task.id)}
+                          checked={task.status === 'DONE'}
+                          disabled={task.status === 'DONE'}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
             </div>
-            <div className="flex items-center gap-5">
-              <Text className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}>Created: {new Date(task.createdAt).toLocaleDateString()}</Text>
-              <EditOutlined
-                className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}
-                onClick={() => showModal(task)}
-              />
-              <DeleteOutlined
-                className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}
-                onClick={() => task.status !== 'DONE' && handleDeleteTask(task.id)}
-              />
-              <Checkbox
-                onChange={() => handleCheckboxChange(task.id)}
-                checked={task.status === 'DONE'}
-                disabled={task.status === 'DONE'}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       {selectedTask && (
         <Modal
-        title="Edit Task"
+          title="Edit Task"
           open={isOpen}
           onCancel={() => setIsOpen(false)}
           footer={
@@ -230,25 +268,25 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
           }
         >
           <form>
-            <div className='flex justify-between items-center'>
-             <div className="pb-[7px] w-[60%]">
-              <label htmlFor="title">Title
-                <Input
-                  name="title"
-                  type="text"
-                  placeholder="Enter title"
-                  value={title}
-                  onChange={handleInputChange}
-                />
-              </label>
+            <div className="flex justify-between items-center">
+              <div className="pb-[7px] w-[60%]">
+                <label htmlFor="title">Title
+                  <Input
+                    name="title"
+                    type="text"
+                    placeholder="Enter title"
+                    value={title}
+                    onChange={handleInputChange}
+                  />
+                </label>
+              </div>
+              <div className="pb-[7px] w-[30%]">
+                <label htmlFor="dueDate">Due Date
+                  <DatePicker onChange={onDateChange} format="MM/DD/YYYY" />
+                </label>
+              </div>
             </div>
-            <div className="pb-[7px] w-[30%]">
-            <label htmlFor="dueDate">Due Date
-                 <DatePicker onChange={onDateChange} format="MM/DD/YYYY" />
-               </label>
-            </div>
-            </div>
-           
+
             <div className="pb-[7px]">
               <label htmlFor="description">Description
                 <TextArea
