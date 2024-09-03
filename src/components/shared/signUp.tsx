@@ -86,9 +86,9 @@ export default function SignUp({ signupCallback }: Props) {
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="bg-white w-[40%] p-[20px] rounded-[10px]">
+            <form onSubmit={handleSubmit} className="bg-white  p-[20px] rounded-[10px] 2xl:w-[40%] xl:w-[55%] lg:w-[60%] md:w-[75%] sm:w-[85%] xs:w-[90%]">
                 <h1 className="font-bold pb-[10px]">Register</h1>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center md:flex-row">
                     <div className="w-[47%]">
                         <label htmlFor="firstName">
                             <Text>First Name</Text>
@@ -106,7 +106,7 @@ export default function SignUp({ signupCallback }: Props) {
                         </label>
                     </div>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center md:flex-row">
                     <div className="w-[47%]">
                         <label htmlFor="email">
                             <Text>Email</Text>
@@ -124,7 +124,7 @@ export default function SignUp({ signupCallback }: Props) {
                         </label>
                     </div>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center md:flex-">
                     <div className="w-[47%]">
                         <label htmlFor="password">
                             <Text>Password</Text>
@@ -169,7 +169,7 @@ export default function SignUp({ signupCallback }: Props) {
                     </Button>
                 </div>
             </form>
-            <div className="bg-white w-[40%] p-[20px] rounded-[10px] flex justify-between items-center">
+            <div className="bg-white  p-[20px] rounded-[10px] flex justify-between items-center 2xl:w-[40%] xl:w-[55%] lg:w-[60%] md:w-[75%] sm:w-[85%] xs:w-[90%]">
                 <div className="flex flex-col">
                     <Text>Already have an account?</Text>
                     <Text>Go to Login</Text>

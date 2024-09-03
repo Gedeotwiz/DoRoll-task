@@ -3,13 +3,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { SettingOutlined, HomeOutlined, CheckOutlined, UpOutlined, UserOutlined } from "@ant-design/icons";
 import { ExclamationCircleOutlined, FolderOutlined, LogoutOutlined } from "@ant-design/icons";
-import { Button, Modal, Input, notification, DatePicker,DatePickerProps } from "antd";
+import { Button, Modal, Input, notification, DatePicker, DatePickerProps } from "antd";
 import { Dayjs } from "dayjs";
 import Image from "next/image";
-import { jwtDecode } from "jwt-decode"; 
-import { useAppDispatch } from "../../redux/store/hooks"; 
-import { useGetUserQuery, useCreateTaskMutation } from "@/components/redux/task/api/apiSlice";
+import {jwtDecode} from "jwt-decode"; 
+import { useGetUserQuery } from "@/components/redux/task/api/apiSlice";
 import head from "../../../images/headphono.png";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 interface UserData {
   firstName: string;
@@ -19,6 +19,38 @@ interface UserData {
 }
 
 const { TextArea } = Input;
+
+export const apiSlice = createApi({
+  reducerPath: "api",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://doroll-app-bn.onrender.com/API/V1",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
+  tagTypes: ['getTodos'],
+  endpoints: (builder) => ({
+    createTask: builder.mutation({
+      query: ({ time, title, description, userId }) => {
+        if (!userId) {
+          throw new Error("User ID is required");
+        }
+        return {
+          url: 'tasks',
+          method: 'POST',
+          body: { time, title, description, userId },
+        };
+      },
+      invalidatesTags: ['getTodos'],
+    }),
+  }),
+});
+
+export const { useCreateTaskMutation } = apiSlice;
 
 export default function Header() {
   const router = useRouter();
@@ -33,59 +65,24 @@ export default function Header() {
     firstName: "",
     lastName: "",
     email: "",
-    profileImage: ""
+    profileImage: "",
   });
+
+  const [createTask] = useCreateTaskMutation(); 
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    router.replace('/')
+    router.replace("/");
   };
 
-  const onDateChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
+  const onDateChange: DatePickerProps<Dayjs[]>["onChange"] = (date, dateString) => {
     if (Array.isArray(dateString)) {
-      setTime(dateString[0] || '');
+      setTime(dateString[0] || "");
     } else {
       setTime(dateString);
     }
   };
 
-  const handleSubmit = async () => {
-    if (!title || !description || !time || !userId) {
-      notification.error({
-        message: "All fields are required!"
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const [addTask] = useCreateTaskMutation();
-      const result = await addTask({ title, description, time, userId }).unwrap();
-      if (result?.payload?.error) {
-        notification.error({
-          message: result.payload?.message[0]
-        });
-      } else {
-        notification.success({
-          message: "Task successfully posted"
-        });
-      }
-      setOpen(false);
-      setTitle("");
-      setDescription("");
-      setTime("");
-    } catch (error) {
-      console.error("Error adding task:", error);
-      notification.error({
-        message: "Failed to add task"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch user ID from token
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -94,7 +91,6 @@ export default function Header() {
     }
   }, []);
 
-  // Fetch user data from API
   const { data: fetchedUserData } = useGetUserQuery(userId as string);
 
   useEffect(() => {
@@ -103,14 +99,43 @@ export default function Header() {
         firstName: fetchedUserData.data.firstName,
         lastName: fetchedUserData.data.lastName,
         email: fetchedUserData.data.email,
-        profileImage: fetchedUserData.data.profileImage
+        profileImage: fetchedUserData.data.profileImage,
       });
     }
   }, [fetchedUserData]);
 
-  // Toggle profile display
+  
   const handProf = () => {
     setIsProfile((prevState) => !prevState);
+  };
+
+  const handleSubmit = async () => {
+    if (!title || !description || !time || !userId) {
+      notification.error({
+        message: "All fields are required!",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const result = await createTask({ title, description, time, userId }).unwrap();
+      notification.success({
+        message: "Task successfully posted",
+      });
+      setOpen(false);
+      setTitle("");
+      setDescription("");
+      setTime("");
+    } catch (error) {
+      console.error("Error adding task:", error);
+      notification.error({
+        message: "Failed to add task",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const isHome = router.pathname === "/";

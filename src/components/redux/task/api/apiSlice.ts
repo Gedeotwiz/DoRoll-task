@@ -5,7 +5,7 @@ import { File } from "buffer";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3001/API/V1",
+    baseUrl: "https://doroll-app-bn.onrender.com/API/V1",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
@@ -44,16 +44,6 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['getTodos']
     }),
-
-    createTask: builder.mutation({
-      query: (formData) => ({
-        url: 'tasks',
-        method: 'POST',
-        body:formData ,
-      }),
-      invalidatesTags: ['getTodos'],  
-    }),
-
     updateTask: builder.mutation({
       query: ({ id, time,title,description }) => ({
         url: `/tasks/${id}`,
@@ -102,12 +92,21 @@ export const apiSlice = createApi({
         };
       },
       invalidatesTags: ['getProfile']
-    })
-    
+    }),
+     
+    forgotPassword: builder.mutation({
+      query: ({ email }) => ({
+        url: 'users/forgot-password',
+        method: 'POST',
+        body: { email },
+      }),
+      invalidatesTags: ['getProfile']
+    }),
+   
   }),
 
 });
 
-export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery,useCreateTaskMutation,
+export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery,useForgotPasswordMutation,
    useSearchTaskQuery,useGetUserQuery,useUpdatePasswordMutation,useUploadImageMutation,
   useUpdateTaskStatusMutation,useUpdateTaskMutation,useDeleteTaskMutation,useUpdateProfileMutation} = apiSlice;

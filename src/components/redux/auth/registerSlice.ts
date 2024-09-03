@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (formData: { firstName: string; lastName: string; email: string; phoneNumber: string; password: string; role: string }) => {
-    const response = await fetch('http://localhost:3001/API/V1/users', {
+    const response = await fetch('https://doroll-app-bn.onrender.com/API/V1/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
