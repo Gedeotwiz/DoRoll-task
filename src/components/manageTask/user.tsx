@@ -255,7 +255,7 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
                         />
                         <DeleteOutlined
                           className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}
-                          onClick={() => task.status === 'DONE' || showModalView(task)}
+                          onClick={() => task.status === 'DONE' || handleDeleteTask(task.id)}
                         />
                         <Checkbox
                           onChange={() => handleCheckboxChange(task.id)}
