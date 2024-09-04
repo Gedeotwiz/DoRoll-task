@@ -10,6 +10,7 @@ import filter from "../images/filter.png";
 import Image from "next/image";
 import Percent from "@/components/percent";
 import { jwtDecode } from "jwt-decode";
+import PrivateRoute from "../components/privent"
 import { useGetTaskRelatedToUserIdQuery, useGetTasksQuery } from "@/components/redux/task/api/apiSlice";
 
 interface Task {
@@ -68,9 +69,10 @@ const Home = () => {
   };
 
   return (
-    <>
-      <Header />
-      <div className="bg-[#dddd] h-[88vh] py-[20px] px-[50px]">
+    
+    <PrivateRoute>
+          <Header />
+          <div className="bg-[#dddd] h-[88vh] py-[20px] px-[50px]">
         <div className="bg-white rounded-[10px] flex justify-between items-center p-[10px]">
           <div>
             <h1>Pending Task - {pendingNumber}</h1>
@@ -147,7 +149,7 @@ const Home = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </PrivateRoute>
   );
 };
 

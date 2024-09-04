@@ -23,6 +23,7 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
   const [role, setRole] = useState<string | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isView, setIsView] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
@@ -127,6 +128,14 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
     setIsOpen(true);
   };
 
+  const showModalView = (task: Task) => {
+    setSelectedTask(task);
+    setTitle(task.title);
+    setDescription(task.description);
+    setTime(task.time);
+    setIsView(true);
+  };
+
   const handleSubmit = async (taskId: number) => {
     setLoading(true);
     try {
@@ -163,6 +172,14 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
       });
       console.error('Failed to delete task:', error);
     }
+  };
+
+  const handleOk = () => {
+    setIsView(false);
+  };
+
+  const handleCancel = () => {
+    setIsView(false);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -210,7 +227,7 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
                     >
                       <div
                         className={`flex items-center gap-5 w-[70%] ${task.status !== 'DONE' ? 'cursor-pointer' : ''}`}
-                        onClick={() => task.status !== 'DONE' && showModal(task)}
+                        onClick={() => task.status === 'DONE' || showModalView(task)}
                       >
                         <div className="flex items-center gap-2.5">
                           <HolderOutlined style={{ transform: 'rotate(90deg)' }} />
@@ -238,7 +255,7 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
                         />
                         <DeleteOutlined
                           className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}
-                          onClick={() => task.status !== 'DONE' && handleDeleteTask(task.id)}
+                          onClick={() => task.status === 'DONE' || showModalView(task)}
                         />
                         <Checkbox
                           onChange={() => handleCheckboxChange(task.id)}
@@ -257,6 +274,34 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
       </DragDropContext>
 
       {selectedTask && (
+        <div>
+            <Modal
+        open={isView}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={
+          <div className='flex justify-between items-center text-xs'>
+            <Text>Created at {new Date(selectedTask.createdAt).toLocaleDateString()}</Text>
+            <div className='flex justify-center items-center gap-2'>
+              <Button type="primary" icon={<EditOutlined />} onClick={() => showModal(selectedTask)} disabled={selectedTask.status === 'DONE'}>Edit</Button>
+              <Button danger icon={<DeleteOutlined />}
+                 onClick={() => selectedTask.status === 'DONE' && handleDeleteTask(selectedTask.id)}
+              >Delete</Button>
+            </div>
+          </div>
+        }
+      >
+        <h1 className='font-bold pb-4'>{selectedTask.title}</h1>
+        <div className='flex gap-4 pb-2'>
+          <Tag color={selectedTask.status === 'ON-TRACK' ? "default" : selectedTask.status === 'DONE' ? "success" : "error"}>
+            {selectedTask.status}
+          </Tag>
+          <Text>Due: {selectedTask.time}</Text>
+        </div>
+        <Text>
+          {selectedTask.description}
+        </Text>
+      </Modal>
         <Modal
           title="Edit Task"
           open={isOpen}
@@ -300,6 +345,8 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
             </div>
           </form>
         </Modal>
+        </div>
+       
       )}
     </>
   );
