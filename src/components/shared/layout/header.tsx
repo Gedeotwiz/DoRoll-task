@@ -32,8 +32,12 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ['getTodos'],
+  tagTypes: ['getTodos'], 
   endpoints: (builder) => ({
+    getTodos: builder.query({
+      query: () => 'tasks',
+      providesTags: ['getTodos'], 
+    }),
     createTask: builder.mutation({
       query: ({ time, title, description, userId }) => {
         if (!userId) {
@@ -45,10 +49,11 @@ export const apiSlice = createApi({
           body: { time, title, description, userId },
         };
       },
-      invalidatesTags: ['getTodos'],
+      invalidatesTags: ['getTodos'], 
     }),
   }),
 });
+
 
 export const { useCreateTaskMutation } = apiSlice;
 

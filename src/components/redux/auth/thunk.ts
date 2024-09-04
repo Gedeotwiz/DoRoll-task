@@ -22,8 +22,10 @@ export const loginUser = createAsyncThunk(
     }  
  
     const data = await response.json(); 
+    console.log(data)
       
-    localStorage.setItem('token', data.token);   
+   const resentToken= localStorage.setItem('token', data.token); 
+ 
 
     return data;   
   }  
