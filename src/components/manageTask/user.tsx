@@ -126,6 +126,7 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
     setDescription(task.description);
     setTime(task.time);
     setIsOpen(true);
+    setIsView(false);
   };
 
   const showModalView = (task: Task) => {
@@ -204,7 +205,7 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
   };
 
   if (isLoading) return <p className="text-center">Loading...</p>;
-  if (error) return <p className="text-center text-3xl">Error retrieving tasks</p>;
+  if (error) return <p className="text-center text-3xl">No task found on this page</p>;
 
   return (
     <>

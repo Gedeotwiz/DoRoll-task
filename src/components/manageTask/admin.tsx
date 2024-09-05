@@ -204,7 +204,7 @@ export default function AdminTask({ searchTerm, filterStatus, timeFilter }: { se
   };
 
   if (isLoading) return <p className="text-center">Loading...</p>;
-  if (error) return <p className="text-center text-3xl">Error retrieving tasks</p>;
+  if (error) return <p className="text-center text-3xl">No task found</p>;
 
   return (
     <>

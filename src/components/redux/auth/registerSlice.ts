@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
-  async (formData: { firstName: string; lastName: string; email: string; phoneNumber: string; password: string; role: string }) => {
+  async (formData: { firstName: string; lastName: string; email: string; phoneNumber: string; password: string; role: string },{ rejectWithValue }) => {
     const response = await fetch('https://doroll-app-bn.onrender.com/API/V1/users', {
       method: 'POST',
       headers: {
@@ -11,9 +11,15 @@ export const registerUser = createAsyncThunk(
       },
       body: JSON.stringify(formData),
     });
-    return response.json();
+    const data = await response.json();
+    if (!response.ok) {
+      return rejectWithValue(data.message || 'Failed to fetch');
+    }
+    return data;
   }
 );
+
+
 
 interface AuthState {
   user: any; 

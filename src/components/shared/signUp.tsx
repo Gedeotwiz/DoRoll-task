@@ -43,15 +43,17 @@ export default function SignUp({ signupCallback }: Props) {
         }
 
             const response = await dispatch(registerUser(formData) as any);
-            if(response?.payload?.error){
+
+            if (registerUser.rejected.match(response)) {
                 notification.error({
-                    message: response?.payload?.message[0]
-                })
-            }else{
+                    message: 'Login failed',
+                    description: response.payload as string || 'Invalid credentials, please try again.',
+                });
+            } else if (registerUser.fulfilled.match(response)) {
                 notification.success({
-                            message: 'Registration successful, Please Login with your new account'
-                        })
-                        signupCallback()
+                    message: 'Registration successful, Please Login with your new account'
+                })
+                signupCallback()
             }
     };
 
