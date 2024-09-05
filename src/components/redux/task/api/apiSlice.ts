@@ -15,7 +15,7 @@ export const apiSlice = createApi({
     },
     
   }),
-  tagTypes: ['getTodos', 'getProfile'],
+  tagTypes: ['getTodos', 'getProfile','getOneTods'],
   endpoints: (builder) => ({
     getTasks: builder.query<any, void>({
       query: () => "tasks",
@@ -24,7 +24,7 @@ export const apiSlice = createApi({
 
     getTaskRelatedToUserId: builder.query<any, void>({
       query: () => "tasks/userId/tasks",
-      providesTags: ['getTodos']
+      providesTags: ['getOneTods']
     }),
 
     getUser: builder.query<any, string>({
@@ -102,11 +102,25 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['getProfile']
     }),
+
+    createTask: builder.mutation({
+      query: ({ time, title, description, userId }) => {
+        if (!userId) {
+          throw new Error("User ID is required");
+        }
+        return {
+          url: 'tasks',
+          method: 'POST',
+          body: { time, title, description, userId },
+        };
+      }, 
+      invalidatesTags: ['getOneTods']
+    }),
    
   }),
 
 });
 
-export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery,useForgotPasswordMutation,
+export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery,useForgotPasswordMutation,useCreateTaskMutation,
    useSearchTaskQuery,useGetUserQuery,useUpdatePasswordMutation,useUploadImageMutation,
   useUpdateTaskStatusMutation,useUpdateTaskMutation,useDeleteTaskMutation,useUpdateProfileMutation} = apiSlice;

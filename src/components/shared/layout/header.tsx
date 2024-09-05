@@ -7,7 +7,7 @@ import { Button, Modal, Input, notification, DatePicker, DatePickerProps } from 
 import { Dayjs } from "dayjs";
 import Image from "next/image";
 import {jwtDecode} from "jwt-decode"; 
-import { useGetUserQuery } from "@/components/redux/task/api/apiSlice";
+import { useGetUserQuery,useCreateTaskMutation } from "@/components/redux/task/api/apiSlice";
 import head from "../../../images/headphono.png";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -19,43 +19,6 @@ interface UserData {
 }
 
 const { TextArea } = Input;
-
-export const apiSlice = createApi({
-  reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://doroll-app-bn.onrender.com/API/V1",
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-  tagTypes: ['getTodos'], 
-  endpoints: (builder) => ({
-    getTodos: builder.query({
-      query: () => 'tasks',
-      providesTags: ['getTodos'], 
-    }),
-    createTask: builder.mutation({
-      query: ({ time, title, description, userId }) => {
-        if (!userId) {
-          throw new Error("User ID is required");
-        }
-        return {
-          url: 'tasks',
-          method: 'POST',
-          body: { time, title, description, userId },
-        };
-      },
-      invalidatesTags: ['getTodos'], 
-    }),
-  }),
-});
-
-
-export const { useCreateTaskMutation } = apiSlice;
 
 export default function Header() {
   const router = useRouter();
@@ -95,6 +58,7 @@ export default function Header() {
       setUserId(decoded.userId);
     }
   }, []);
+
 
   const { data: fetchedUserData } = useGetUserQuery(userId as string);
 
