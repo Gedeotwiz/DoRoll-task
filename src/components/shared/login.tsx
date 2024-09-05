@@ -1,5 +1,5 @@
 import { LoginOutlined, MailOutlined, LockOutlined, CheckOutlined, EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
-import { Input, Button, Card, Typography, message, notification } from "antd";
+import { Input, Button, Card, Typography, notification } from "antd";
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
@@ -23,7 +23,7 @@ export default function Login(props: LoginProps) {
     const dispatch = useAppDispatch();
     const router = useRouter();
     
-    const { status, error, user } = useAppSelector((state) => state.auth);
+    const { status, error } = useAppSelector((state) => state.auth);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -53,24 +53,18 @@ export default function Login(props: LoginProps) {
         e.preventDefault();
         if (!validate()) return;
 
-        try {
-            const result = await dispatch(loginUser(formData));
-            if(result?.payload?.error){
-                notification.error({
-                    message: result.payload?.message[0]
-                })
-            }else{
-                notification.success({
-                    message: 'Login successfuly'
-                })
-        
-                router.push('/dashboardPage');
-            }
-        } catch (error) {
-            console.error('Error:', error);
+        const result = await dispatch(loginUser(formData));
+
+        if (loginUser.rejected.match(result)) {
             notification.error({
-                message: 'Fail to login'
-            })
+                message: 'Login failed',
+                description: result.payload as string || 'Invalid credentials, please try again.',
+            });
+        } else if (loginUser.fulfilled.match(result)) {
+            notification.success({
+                message: 'Login successful!',
+            });
+            router.push('/dashboardPage');
         }
     };
 
