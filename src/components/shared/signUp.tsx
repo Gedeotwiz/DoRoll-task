@@ -55,16 +55,6 @@ export default function SignUp({ signupCallback }: Props) {
                 })
                 signupCallback()
             }
-            // if(response?.payload?.error){
-            //     notification.error({
-            //         message: response?.payload?.message[0]
-            //     })
-            // }else{
-            //     notification.success({
-            //                 message: 'Registration successful, Please Login with your new account'
-            //             })
-            //             signupCallback()
-            // }
     };
 
     const validate = () => {
