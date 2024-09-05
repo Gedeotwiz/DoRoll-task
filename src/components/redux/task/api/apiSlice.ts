@@ -116,11 +116,21 @@ export const apiSlice = createApi({
       }, 
       invalidatesTags: ['getOneTods']
     }),
+
+    login:builder.mutation({
+      query:({...formData})=>{
+        return{
+          url:'users/login',
+          method:'POST',
+          body:{formData}
+        }
+      }
+    })
    
   }),
 
 });
 
-export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery,useForgotPasswordMutation,useCreateTaskMutation,
+export const { useGetTasksQuery, useGetTaskRelatedToUserIdQuery,useForgotPasswordMutation,useCreateTaskMutation,useLoginMutation,
    useSearchTaskQuery,useGetUserQuery,useUpdatePasswordMutation,useUploadImageMutation,
   useUpdateTaskStatusMutation,useUpdateTaskMutation,useDeleteTaskMutation,useUpdateProfileMutation} = apiSlice;

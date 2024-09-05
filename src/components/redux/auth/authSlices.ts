@@ -1,19 +1,17 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUser } from './thunk'; 
-
+import { createSlice } from '@reduxjs/toolkit';
+import { loginUser } from './thunk';
 
 interface AuthState {
-    user: any; 
-    error: string | null;
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  }
+  user: any;
+  error: string | null;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+}
 
 const initialState: AuthState = {
   user: null,
   error: null,
   status: 'idle',
 };
-
 
 const authSlice = createSlice({
   name: 'auth',
@@ -31,7 +29,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message ?? 'An unknown error occurred';
+        state.error = action.payload as string;
       });
   },
 });

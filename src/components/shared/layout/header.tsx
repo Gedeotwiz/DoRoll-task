@@ -9,8 +9,6 @@ import Image from "next/image";
 import {jwtDecode} from "jwt-decode"; 
 import { useGetUserQuery,useCreateTaskMutation } from "@/components/redux/task/api/apiSlice";
 import head from "../../../images/headphono.png";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
 interface UserData {
   firstName: string;
   lastName: string;
