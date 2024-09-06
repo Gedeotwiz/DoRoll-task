@@ -4,10 +4,9 @@ import { LoginOutlined, UserOutlined, PhoneOutlined, MailOutlined, LockOutlined,
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../redux/auth/registerSlice';
-import { Router } from "next/router";
 
 type Props = {
-    signupCallback: () => void
+    signupCallback: () => void;
 }
 
 const { Text } = Typography;
@@ -27,8 +26,6 @@ export default function SignUp({ signupCallback }: Props) {
     const [showErrors, setShowErrors] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-    const [position, setPosition] = useState<'start' | 'end'>('end');
-    const [login,setLogin]=useState(false)
     const dispatch = useDispatch();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,19 +39,19 @@ export default function SignUp({ signupCallback }: Props) {
             return;
         }
 
-            const response = await dispatch(registerUser(formData) as any);
+        const response = await dispatch(registerUser(formData) as any);
 
-            if (registerUser.rejected.match(response)) {
-                notification.error({
-                    message: 'Login failed',
-                    description: response.payload as string || 'Invalid credentials, please try again.',
-                });
-            } else if (registerUser.fulfilled.match(response)) {
-                notification.success({
-                    message: 'Registration successful, Please Login with your new account'
-                })
-                signupCallback()
-            }
+        if (registerUser.rejected.match(response)) {
+            notification.error({
+                message: 'Registration failed',
+                description: response.payload as string || 'Something went wrong, please try again.',
+            });
+        } else if (registerUser.fulfilled.match(response)) {
+            notification.success({
+                message: 'Registration successful! Please login.',
+            });
+            signupCallback();
+        }
     };
 
     const validate = () => {
@@ -72,10 +69,10 @@ export default function SignUp({ signupCallback }: Props) {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleCheckboxChange = (e: CheckboxChangeEvent) => { 
+    const handleCheckboxChange = (e: CheckboxChangeEvent) => {
         setIsChecked(e.target.checked);
-        setShowErrors(true); 
-        validate(); 
+        setShowErrors(true);
+        validate();
     };
 
     const togglePasswordVisibility = () => {
@@ -88,46 +85,72 @@ export default function SignUp({ signupCallback }: Props) {
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="bg-white  p-[20px] rounded-[10px] 2xl:w-[40%] xl:w-[55%] lg:w-[60%] md:w-[75%] sm:w-[85%] xs:w-[90%]">
+            <form
+                onSubmit={handleSubmit}
+                className="bg-white p-[20px] rounded-[10px] w-full 2xl:w-[40%] xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[85%] xs:w-[90%]">
                 <h1 className="font-bold pb-[10px]">Register</h1>
-                <div className="flex justify-between items-center md:flex-row">
-                    <div className="w-[47%]">
+                <div className="flex flex-wrap justify-between items-center">
+                    <div className="w-full md:w-[47%] mb-4">
                         <label htmlFor="firstName">
                             <Text>First Name</Text>
-                            <Input type="text" prefix={<UserOutlined className="text-[#c0d310]" />} placeholder="Enter first name"
-                                name="firstName" value={formData.firstName} onChange={handleChange} />
+                            <Input
+                                type="text"
+                                prefix={<UserOutlined className="text-[#c0d310]" />}
+                                placeholder="Enter first name"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                            />
                             {showErrors && errors.firstName && <span className="text-red-500">{errors.firstName}</span>}
                         </label>
                     </div>
-                    <div className="w-[47%]">
+                    <div className="w-full md:w-[47%] mb-4">
                         <label htmlFor="lastName">
                             <Text>Last Name</Text>
-                            <Input type="text" placeholder="Enter last name" prefix={<UserOutlined className="text-[#c0d310]" />}
-                                name="lastName" value={formData.lastName} onChange={handleChange} />
+                            <Input
+                                type="text"
+                                placeholder="Enter last name"
+                                prefix={<UserOutlined className="text-[#c0d310]" />}
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                            />
                             {showErrors && errors.lastName && <span className="text-red-500">{errors.lastName}</span>}
                         </label>
                     </div>
                 </div>
-                <div className="flex justify-between items-center md:flex-row">
-                    <div className="w-[47%]">
+                <div className="flex flex-wrap justify-between items-center">
+                    <div className="w-full md:w-[47%] mb-4">
                         <label htmlFor="email">
                             <Text>Email</Text>
-                            <Input type="email" placeholder="Enter email" prefix={<MailOutlined className="text-[#c0d310]" />}
-                                name="email" value={formData.email} onChange={handleChange} />
+                            <Input
+                                type="email"
+                                placeholder="Enter email"
+                                prefix={<MailOutlined className="text-[#c0d310]" />}
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                            />
                             {showErrors && errors.email && <span className="text-red-500">{errors.email}</span>}
                         </label>
                     </div>
-                    <div className="w-[47%]">
+                    <div className="w-full md:w-[47%] mb-4">
                         <label htmlFor="phoneNumber">
                             <Text>Phone Number</Text>
-                            <Input type="text" placeholder="250 --- --- ---" prefix={<PhoneOutlined className="text-[#c0d310]" />}
-                                name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+                            <Input
+                                type="text"
+                                placeholder="250 --- --- ---"
+                                prefix={<PhoneOutlined className="text-[#c0d310]" />}
+                                name="phoneNumber"
+                                value={formData.phoneNumber}
+                                onChange={handleChange}
+                            />
                             {showErrors && errors.phoneNumber && <span className="text-red-500">{errors.phoneNumber}</span>}
                         </label>
                     </div>
                 </div>
-                <div className="flex justify-between items-center md:flex-">
-                    <div className="w-[47%]">
+                <div className="flex flex-wrap justify-between items-center">
+                    <div className="w-full md:w-[47%] mb-4">
                         <label htmlFor="password">
                             <Text>Password</Text>
                             <Input
@@ -135,48 +158,63 @@ export default function SignUp({ signupCallback }: Props) {
                                 placeholder="Enter password"
                                 prefix={<LockOutlined className="text-[#c0d310]" />}
                                 suffix={
-                                    passwordVisible ?
-                                        <EyeInvisibleOutlined className="text-[10px] text-[#c0d310]" onClick={togglePasswordVisibility} /> :
-                                        <EyeOutlined className="text-[10px] text-[#c0d310]" onClick={togglePasswordVisibility} />
+                                    passwordVisible ? (
+                                        <EyeInvisibleOutlined className="text-[#c0d310]" onClick={togglePasswordVisibility} />
+                                    ) : (
+                                        <EyeOutlined className="text-[#c0d310]" onClick={togglePasswordVisibility} />
+                                    )
                                 }
-                                name="password" value={formData.password} onChange={handleChange} />
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                            />
                             {showErrors && errors.password && <span className="text-red-500">{errors.password}</span>}
                         </label>
                     </div>
-                    <div className="w-[47%]">
+                    <div className="w-full md:w-[47%] mb-4">
                         <label htmlFor="confirmPassword">
                             <Text>Confirm Password</Text>
                             <Input
                                 type={confirmPasswordVisible ? "text" : "password"}
-                                placeholder="Enter confirm password"
+                                placeholder="Confirm password"
                                 prefix={<LockOutlined className="text-[#c0d310]" />}
                                 suffix={
-                                    confirmPasswordVisible ?
-                                        <EyeInvisibleOutlined className="text-[10px] text-[#c0d310]" onClick={toggleConfirmPasswordVisibility} /> :
-                                        <EyeOutlined className="text-[10px] text-[#c0d310]" onClick={toggleConfirmPasswordVisibility} />
+                                    confirmPasswordVisible ? (
+                                        <EyeInvisibleOutlined className="text-[#c0d310]" onClick={toggleConfirmPasswordVisibility} />
+                                    ) : (
+                                        <EyeOutlined className="text-[#c0d310]" onClick={toggleConfirmPasswordVisibility} />
+                                    )
                                 }
-                                name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                            />
                             {showErrors && errors.confirmPassword && <span className="text-red-500">{errors.confirmPassword}</span>}
                         </label>
                     </div>
                 </div>
-                <div className="flex justify-between items-center pt-[20px]">
-                    <div className="flex justify-center items-center">
-                        <Checkbox checked={isChecked} onChange={handleCheckboxChange}>
-                            I agree to the <Text className="underline font-medium text-xs">Terms and Conditions</Text>
-                        </Checkbox>
-                    </div>
-                    <Button type="primary" htmlType="submit" icon={<LoginOutlined />} iconPosition={position} disabled={!isChecked}>
-                        Register
-                    </Button>
-                </div>
+                <div className="flex justify-between items-center pt-[20px] xs:flex-col sm:flex-col md:flex-row">
+    <Checkbox checked={isChecked} onChange={handleCheckboxChange}>
+        I agree to the <Text className="underline font-medium text-xs">Terms and Conditions</Text>
+    </Checkbox>
+    <Button
+        type="primary"
+        htmlType="submit"
+        icon={<LoginOutlined />}
+        disabled={!isChecked}>
+        Register
+    </Button>
+</div>
+
             </form>
-            <div className="bg-white  p-[20px] rounded-[10px] flex justify-between items-center 2xl:w-[40%] xl:w-[55%] lg:w-[60%] md:w-[75%] sm:w-[85%] xs:w-[90%]">
+            <div className="bg-white p-[20px] rounded-[10px] flex justify-between items-center w-full 2xl:w-[40%] xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[85%] xs:w-[90%]">
                 <div className="flex flex-col">
                     <Text>Already have an account?</Text>
                     <Text>Go to Login</Text>
                 </div>
-                <Button onClick={signupCallback} icon={<LoginOutlined className="text-[#c0d310]" />} iconPosition={position}>Login</Button>
+                <Button onClick={signupCallback} icon={<LoginOutlined className="text-[#c0d310]" />}>
+                    Login
+                </Button>
             </div>
         </>
     );

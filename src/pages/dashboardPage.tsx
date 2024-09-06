@@ -72,7 +72,7 @@ const Home = () => {
     
     <PrivateRoute>
           <Header />
-          <div className="bg-[#dddd] h-[88vh] py-[20px] px-[50px]">
+          <div className="bg-[#dddd] lg:h-[88vh] md:h-auto py-[20px] lg:px-[50px] md:px-[15px] sm:px-[15px] xm:px-[15px]">
         <div className="bg-white rounded-[10px] flex justify-between items-center p-[10px]">
           <div>
             <h1>Pending Task - {pendingNumber}</h1>
@@ -107,46 +107,47 @@ const Home = () => {
             />
           </div>
         </div>
-        <div className="flex justify-between items-center pt-[20px] gap-2">
-          <div className="bg-white w-[25%] rounded-[10px] p-6 h-[75vh] flex flex-col justify-between">
-            <div>
+        <div className="flex lg:flex-row md:flex-col sm:flex-col xm:flex-col items-center pt-[20px] gap-2">
+  
+        <div className="bg-white lg:w-[25%] md:w-full sm:w-full xs:w-full rounded-[10px] p-6 lg:h-[75vh] md:h-auto flex flex-col justify-between">
+           <div>
               <h1>Summary</h1>
-              <div className="w-full flex flex-grow justify-center items-center py-4">
-                <Select
-                  className="w-[96%]"
-                  showSearch
-                  suffixIcon={<Image src={filter} alt="icon" className="w-[20px]" />}
-                  onChange={(value) => setTimeFilter(value)}
-                  filterOption={(input, option) =>
-                    (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                  }
-                  options={[
-                    { value: "", label: "Show" },
-                    { value: "daily", label: "Today" },
-                    { value: "weekly", label: "This Week" },
-                    { value: "monthly", label: "This Month" },
-                  ]}
-                  defaultValue=""
-                />
-              </div>
+                <div className="w-full flex flex-grow justify-center items-center py-4">
+               <Select
+          className="w-[96%] hidden lg:block md:clear-none"
+          showSearch
+          suffixIcon={<Image src={filter} alt="icon" className="w-[20px]" />}
+          onChange={(value) => setTimeFilter(value)}
+          filterOption={(input, option) =>
+            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+          }
+          options={[
+            { value: "", label: "Show" },
+            { value: "daily", label: "Today" },
+            { value: "weekly", label: "This Week" },
+            { value: "monthly", label: "This Month" },
+          ]}
+          defaultValue=""
+        />
+      </div>
 
-              <Percent />
-            </div>
-            <div className="bg-[#eeee] rounded-[10px] p-[10px]">
-              <h1 className="text-[15px] pb-[5px]">Daily Tip:</h1>
-              <div className="flex justify-between items-center gap-4">
-                <HolderOutlined style={{ transform: "rotate(90deg)" }} />
-                <p>
-                  "If the problem can be solved with action, you don’t have a problem.
-                  <span className="text-[#c0d310]"> You have an opportunity.</span>"
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white w-[80%] rounded-[10px] p-6 h-[75vh] overflow-y-scroll">
-            <Tasks searchTerm={searchTerm} filterStatus={filterStatus} />
-          </div>
+      <Percent />
+    </div>
+    <div className="bg-[#eeee] hidden lg:block md:clear-none rounded-[10px] p-[10px]">
+      <h1 className="text-[15px] pb-[5px]">Daily Tip:</h1>
+      <div className="flex justify-between items-center gap-4">
+        <HolderOutlined style={{ transform: "rotate(90deg)" }} />
+        <p>
+          "If the problem can be solved with action, you don’t have a problem.
+          <span className="text-[#c0d310]"> You have an opportunity.</span>"
+        </p>
+      </div>
+    </div>
         </div>
+        <div className="bg-white lg:w-[75%] md:w-full sm:w-full xs:w-full rounded-[10px] py-6 h-[75vh] overflow-y-scroll">
+           <Tasks searchTerm={searchTerm} filterStatus={filterStatus} />
+         </div>
+      </div>
       </div>
       <Footer />
     </PrivateRoute>

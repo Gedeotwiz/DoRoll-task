@@ -211,53 +211,72 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
     <>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="tasksList">
-          {(provided:any) => (
+          {(provided: any) => (
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="flex flex-col"
+              className="flex flex-col w-[100%]" 
             >
               {filteredTasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
-                  {(provided:any) => (
+                  {(provided: any) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className={`flex justify-between items-center hover:bg-gray-200 py-2 px-4 ${task.status === 'DONE' ? 'text-gray-300 cursor-not-allowed' : ''}`}
+                      className={`flex flex-col flex-wrap w-full gap-4 md:flex-row justify-between items-start md:items-center bg-white hover:bg-gray-200 py-2 px-4 mb-2 rounded-lg shadow-md ${task.status === 'DONE' ? 'text-gray-300 cursor-not-allowed' : ''}`}
                     >
                       <div
-                        className={`flex items-center gap-5 w-[70%] ${task.status !== 'DONE' ? 'cursor-pointer' : ''}`}
+                        className={`flex flex-row  md:flex-row  items-start md:items-center gap-3 sm:w-full lg:w-[70%] ${task.status === 'DONE' ? 'cursor-pointer' : ''}`}
                         onClick={() => task.status === 'DONE' || showModalView(task)}
                       >
-                        <div className="flex items-center gap-2.5">
+                        
+                        <div className="flex items-center gap-2  md:w-auto">
                           <HolderOutlined style={{ transform: 'rotate(90deg)' }} />
                           <p className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}>{index + 1}</p>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <div className="w-28">
-                            <Tag color={task.status === 'ON-TRACK' ? 'default' : task.status === 'DONE' ? 'success' : 'error'}>
+
+                       
+                        <div className="flex items-center  justify-between md:justify-start  md:w-auto">
+                          <div className="flex items-center gap-2 w-full md:w-auto">
+                            <div className=' w-[100px]'>
+                            <Tag
+                              color={task.status === 'ON-TRACK' ? 'default' : task.status === 'DONE' ? 'success' : 'error'}
+                              
+                            >
                               {task.status}
                             </Tag>
+                            </div>
+                            <Text
+                              className={`${task.status === 'DONE' ? 'text-gray-300' : task.status === 'OFF-TRACK' ? 'text-red-300' : ''}`}
+                            >
+                              Due: {task.time}
+                            </Text>
                           </div>
-                          <Text className={`${task.status === 'DONE' ? 'text-gray-300' : task.status === 'OFF-TRACK' ? 'text-red-300' : ''}`}>
-                            Due: {task.time}
-                          </Text>
                         </div>
+
+                        
                         <Text className={`${task.status === 'DONE' ? 'text-gray-300' : task.status === 'OFF-TRACK' ? 'text-red-300' : ''}`}>
                           {task.title}
                         </Text>
                       </div>
-                      <div className="flex items-center gap-5">
-                        <Text className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}>Created: {new Date(task.createdAt).toLocaleDateString()}</Text>
+
+                      <div className="flex items-center gap-5 mt-2 md:mt-0 w-full md:w-auto">
+                        
+                        <span className="hidden lg:block md:clear-none text-xs text-gray-500">
+                          Created: {new Date(task.createdAt).toLocaleDateString()}
+                        </span>
+
                         <EditOutlined
-                          className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}
-                          onClick={() => showModal(task)}
+                          className={`${task.status !== 'DONE' ? 'text-gray-300' : ''}`}
+                          onClick={() =>task.status !== 'DONE' ? showModal(task):''}
                         />
                         <DeleteOutlined
                           className={`${task.status === 'DONE' ? 'text-gray-300' : ''}`}
-                          onClick={() => task.status === 'DONE' || handleDeleteTask(task.id)}
+                          onClick={() => task.status === 'DONE'? handleDeleteTask(task.id):showModalView(task)}
                         />
+
+                        
                         <Checkbox
                           onChange={() => handleCheckboxChange(task.id)}
                           checked={task.status === 'DONE'}
@@ -275,79 +294,101 @@ export default function UserTask({ searchTerm, filterStatus, timeFilter }: { sea
       </DragDropContext>
 
       {selectedTask && (
-        <div>
-            <Modal
-        open={isView}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={
-          <div className='flex justify-between items-center text-xs'>
-            <Text>Created at {new Date(selectedTask.createdAt).toLocaleDateString()}</Text>
-            <div className='flex justify-center items-center gap-2'>
-              <Button type="primary" icon={<EditOutlined />} onClick={() => showModal(selectedTask)} disabled={selectedTask.status === 'DONE'}>Edit</Button>
-              <Button danger icon={<DeleteOutlined />}
-                 onClick={() => selectedTask.status === 'DONE' && handleDeleteTask(selectedTask.id)}
-              >Delete</Button>
+        <>
+          
+          <Modal
+            open={isView}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={
+              <div className="flex justify-between items-center text-xs">
+                <Text>Created at {new Date(selectedTask.createdAt).toLocaleDateString()}</Text>
+                <div className="flex justify-center items-center gap-2">
+                  <Button
+                    type="primary"
+                    icon={<EditOutlined />}
+                    onClick={() => showModal(selectedTask)}
+                    disabled={selectedTask.status === 'DONE'}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    danger
+                    icon={<DeleteOutlined />}
+                    onClick={() => selectedTask.status !== 'DONE' && handleDeleteTask(selectedTask.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            }
+          >
+            <h1 className="font-bold pb-4">{selectedTask.title}</h1>
+            <div className="flex gap-4 pb-2">
+              <Tag color={selectedTask.status === 'ON-TRACK' ? 'default' : selectedTask.status === 'DONE' ? 'success' : 'error'}>
+                {selectedTask.status}
+              </Tag>
+              <Text>Due: {selectedTask.time}</Text>
             </div>
-          </div>
-        }
-      >
-        <h1 className='font-bold pb-4'>{selectedTask.title}</h1>
-        <div className='flex gap-4 pb-2'>
-          <Tag color={selectedTask.status === 'ON-TRACK' ? "default" : selectedTask.status === 'DONE' ? "success" : "error"}>
-            {selectedTask.status}
-          </Tag>
-          <Text>Due: {selectedTask.time}</Text>
-        </div>
-        <Text>
-          {selectedTask.description}
-        </Text>
-      </Modal>
-        <Modal
-          title="Edit Task"
-          open={isOpen}
-          onCancel={() => setIsOpen(false)}
-          footer={
-            <Button type="primary" onClick={() => handleSubmit(selectedTask.id)} loading={loading}>
-              Edit Task
-            </Button>
-          }
-        >
-          <form>
-            <div className="flex justify-between items-center">
-              <div className="pb-[7px] w-[60%]">
-                <label htmlFor="title">Title
+            <Text>{selectedTask.description}</Text>
+          </Modal>
+
+          
+          <Modal
+            title="Edit Task"
+            open={isOpen}
+            onCancel={() => setIsOpen(false)}
+            footer={
+              <Button
+                type="primary"
+                onClick={() => handleSubmit(selectedTask.id)}
+                loading={loading}
+              >
+                Edit Task
+              </Button>
+            }
+          >
+            <form>
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                
+                <div className="w-full md:w-1/2">
+                  <label htmlFor="title">Title</label>
                   <Input
                     name="title"
                     type="text"
                     placeholder="Enter title"
                     value={title}
                     onChange={handleInputChange}
+                    className="w-full"
                   />
-                </label>
-              </div>
-              <div className="pb-[7px] w-[30%]">
-                <label htmlFor="dueDate">Due Date
-                  <DatePicker onChange={onDateChange} format="MM/DD/YYYY" />
-                </label>
-              </div>
-            </div>
+                </div>
 
-            <div className="pb-[7px]">
-              <label htmlFor="description">Description
+                
+                <div className="w-full md:w-1/3">
+                  <label htmlFor="dueDate">Due Date</label>
+                  <DatePicker
+                    onChange={onDateChange}
+                    format="MM/DD/YYYY"
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              
+              <div className="w-full mt-4">
+                <label htmlFor="description">Description</label>
                 <TextArea
                   name="description"
                   rows={4}
                   placeholder="Enter description"
                   value={description}
                   onChange={handleInputChange}
+                  className="w-full"
                 />
-              </label>
-            </div>
-          </form>
-        </Modal>
-        </div>
-       
+              </div>
+            </form>
+          </Modal>
+        </>
       )}
     </>
   );
