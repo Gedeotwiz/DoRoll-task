@@ -110,7 +110,7 @@ export default function Header() {
 
   return (
     <>
-      <main className="bg-white py-[10px] px-[50px] flex justify-between items-center">
+      <main className="bg-white py-[10px] lg:px-[50px] md:px-[15px] sm:px-[15px] xm:px-[15px] flex justify-between items-center">
         <div className="flex justify-center items-center gap-[10px]">
           <CheckOutlined className="border-4 border-black p-[5px] rounded-[8px] text-bold" />
           <h1>DoRoll</h1>
@@ -138,7 +138,7 @@ export default function Header() {
             <UpOutlined className="text-[10px] border py-[13px] px-[5px] rounded-tr-[5px] rounded-br-[5px]" />
           </div>
           {isProfile && (
-            <div className="bg-white rounded-[5px] absolute top-[56px] right-[2.3%] px-[20px] py-[30px] shadow z-40">
+            <div className="bg-white rounded-[5px] absolute top-[56px] right-[3%] px-[20px] py-[30px] shadow z-40">
               <div className="flex gap-[10px] justify-center items-center">
                 <Image
                   src={userData.profileImage}

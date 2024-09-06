@@ -40,7 +40,7 @@ export default function UserPercent(){
     return (
         <div className="flex flex-wrap gap-2 justify-center">
         <Card
-         className="shadow-sm rounded-lg w-[47%] p-3"
+         className="shadow-sm rounded-lg lg:w-[47%] md:w-[20%] p-3"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -58,7 +58,7 @@ export default function UserPercent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg w-[47%] p-3"
+         className="shadow-sm rounded-lg lg:w-[47%] md:w-[20%] p-3"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -75,7 +75,7 @@ export default function UserPercent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg w-[47%] p-3"
+         className="shadow-sm rounded-lg lg:w-[47%] md:w-[20%] p-3"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">
@@ -92,7 +92,7 @@ export default function UserPercent(){
         </Card>
 
         <Card
-         className="shadow-sm rounded-lg w-[47%] p-3"
+         className="shadow-sm rounded-lg lg:w-[47%] md:w-[20%] p-3"
          style={{borderRadius: "6px",border: "1px solid #e0e0e0",padding: "8px", }} >
          <div className="flex justify-between items-center">
            <div className="flex items-start">

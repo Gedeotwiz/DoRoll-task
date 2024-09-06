@@ -74,22 +74,22 @@ export default function Login(props: LoginProps) {
 
     return (
         <>
-            <Card className="w-2/4">
-                <div className="flex justify-center rounded-[20px]">
-                    <div className="w-[50%] px-[20px] bg-[#eeee] flex flex-col justify-between rounded-tl-[8px] rounded-bl-[8px] py-[35px]">
+            <Card className="w-full md:w-3/4 lg:w-2/4 mx-auto my-5">
+                <div className="flex flex-col md:flex-row justify-center rounded-[20px]">
+                    <div className="w-full md:w-[50%] px-[20px] bg-[#eeee] flex flex-col gap-4 justify-between rounded-tl-[8px] rounded-bl-[8px] py-[35px]">
                         <div className="border-2 border-black p-[5px] rounded-[8px] font-bold w-[35px] text-[#A0D911] text-center flex justify-center items-center">
                             <CheckOutlined className="font-bold text-[#c0d310]" />
                         </div>
                         <div>
-                            <h1 className="font-bold">DoRoll</h1>
+                            <h1 className="font-bold text-lg md:text-xl">DoRoll</h1>
                             <Text>By Awesomity Lab</Text>
                         </div>
                         <span className="text-[10px]">&copy;2024 Awesomity Lab</span>
                     </div>
-                    <form onSubmit={handleSubmit} className="w-[50%] bg-white px-[20px] py-[35px] rounded-tr-[10px] rounded-br-[10px]">
-                        <h1 className="pb-[20px] font-bold">Login</h1>
-                        <div className="w-full">
-                            <label htmlFor="email">
+                    <form onSubmit={handleSubmit} className="w-full md:w-[50%] bg-white px-[20px] py-[35px] rounded-tr-[10px] rounded-br-[10px]">
+                        <h1 className="pb-[20px] font-bold text-lg md:text-xl">Login</h1>
+                        <div className="w-full mb-4">
+                            <label htmlFor="email" className="block mb-1">
                                 <Text>Email</Text>
                                 <Input
                                     type="text"
@@ -98,12 +98,13 @@ export default function Login(props: LoginProps) {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
+                                    className="w-full"
                                 />
                                 {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
                             </label>
                         </div>
-                        <div className="w-full">
-                            <label htmlFor="password">
+                        <div className="w-full mb-4">
+                            <label htmlFor="password" className="block mb-1">
                                 <Text>Password</Text>
                                 <Input
                                     type={passwordVisible ? 'text' : 'password'}
@@ -117,12 +118,13 @@ export default function Login(props: LoginProps) {
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
+                                    className="w-full"
                                 />
                                 {errors.password && <span style={{ color: 'red' }}>{errors.password}</span>}
                             </label>
                         </div>
                         <div className="flex justify-between items-center pt-[20px]">
-                            <Text className="underline" onClick={props.forgot}>Forgot Password</Text>
+                            <Text className="underline cursor-pointer" onClick={props.forgot}>Forgot Password</Text>
                             <Button type="primary" htmlType="submit" icon={<LoginOutlined />}>
                                 Login
                             </Button>
@@ -130,13 +132,15 @@ export default function Login(props: LoginProps) {
                     </form>
                 </div>
             </Card>
-            <Card className="w-2/4">
-                <div className="flex justify-between items-center p-5">
+            <Card className="w-full md:w-3/4 lg:w-2/4 mx-auto mt-5">
+                <div className="flex justify-between items-center p-5 md:flex-row">
                     <div className="flex flex-col">
                         <Text>If you don't have an account?</Text>
                         <Text>Go to register</Text>
                     </div>
-                    <Button onClick={props.pass} icon={<LoginOutlined className="text-[#c0d310]" />} iconPosition="start">Register</Button>
+                    <Button onClick={props.pass} icon={<LoginOutlined className="text-[#c0d310]" />} iconPosition="start">
+                        Register
+                    </Button>
                 </div>
             </Card>
         </>
